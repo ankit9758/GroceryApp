@@ -1,10 +1,14 @@
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import React from 'react';
+import React,{useState} from 'react';
 import ProfileItems from '../../common/ProfileItem';
 import { white, black, red } from '../../../utils/color';
+import SimpleModal from '../../common/SimpleModal';
+
 const Profile = () => {
+    const[visible,setVisible]=useState(false)
     return (
-        <ScrollView >
+        <View>
+   <ScrollView >
             <View style={stylesProfile.screenContainer}>
                 <View style={stylesProfile.profileContainer}>
                     <Image
@@ -34,12 +38,18 @@ const Profile = () => {
                     <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { console.log('Hello') }} />
                     <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Orders'} onClick={() => { console.log('Hello') }} />
                     <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { console.log('Hello') }} />
-                    <ProfileItems leftIcon={require('../../images/logout.png')} title={'Log out'} onClick={() => { Alert.alert('Logout') }} />
+                    <ProfileItems leftIcon={require('../../images/logout.png')} title={'Log out'} onClick={()=>{setVisible(true) }} />
                </View>
             
 
             </View>
         </ScrollView>
+        <SimpleModal modelVisible={visible} title={'Logout ?'} description={'Are you sure you want to Logout ?'} 
+        yesText={'Yes'} noText={'No'} onNoClick={()=>{
+            setVisible(false)}} onYesClick={()=>{setVisible(false)}}
+        />
+        </View>
+     
     );
 }
 export default Profile;
