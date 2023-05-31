@@ -1,0 +1,116 @@
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import ProfileItems from '../../common/ProfileItem';
+import { white, black, red } from '../../../utils/color';
+const Profile = () => {
+    return (
+        <ScrollView >
+            <View style={stylesProfile.screenContainer}>
+                <View style={stylesProfile.profileContainer}>
+                    <Image
+                        source={require('../../images/no_data.png')}
+                        style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30, borderColor: 'red', }}
+                    />
+                    <View style={stylesProfile.profilePhotoContainer}>
+                        <TouchableOpacity
+                            onPress={() => console.log('Hello')
+                            }>
+                            <View style={stylesProfile.uploadBackStyle}>
+                                <Image
+                                    source={require('../../images/pencil.png')}
+                                    style={stylesProfile.uploadIconStyle}
+                                />
+                            </View>
+
+                        </TouchableOpacity>
+                    </View>
+
+                </View>
+                <Text style={[stylesProfile.appTextBold20, { alignSelf: 'center', marginTop: 40, paddingHorizontal: 20 }]}>Name : Ankit singh Panwar </Text>
+                <Text style={[stylesProfile.appTextBold18, { alignSelf: 'center', marginTop: 5, paddingHorizontal: 20 }]}>Email : ankitsingh9758@gmail.com</Text>
+                <Text style={[stylesProfile.appTextBold16, { alignSelf: 'center', marginTop: 5, paddingHorizontal: 20 }]}>Phone : 9873486588 </Text>
+
+                <View style={{ marginTop: 30 ,marginBottom:80}}>
+                    <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { console.log('Hello') }} />
+                    <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Orders'} onClick={() => { console.log('Hello') }} />
+                    <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { console.log('Hello') }} />
+                    <ProfileItems leftIcon={require('../../images/logout.png')} title={'Log out'} onClick={() => { Alert.alert('Logout') }} />
+               </View>
+            
+
+            </View>
+        </ScrollView>
+    );
+}
+export default Profile;
+
+
+const stylesProfile = StyleSheet.create({
+    screenContainer: {
+        flex: 1,
+       
+    },
+    profileContainer: {
+        height: 120,
+        width: 120,
+        alignSelf: 'center'
+
+    },
+    appButtonText: {
+        fontSize: 18,
+        color: white,
+        alignSelf: "center",
+        textTransform: "none",
+        fontFamily: 'Raleway-ExtraBold'
+    },
+    appTextBold64: {
+        fontSize: 64,
+        color: white,
+        alignSelf: 'flex-start',
+        fontFamily: 'Raleway-Black'
+
+    },
+    appButton: {
+        padding: 12,
+    },
+    appTextBold18: {
+        fontSize: 18,
+        color: white,
+        fontFamily: 'Raleway-Medium'
+
+
+    },
+    appTextBold20: {
+        fontSize: 20,
+        color: white,
+        fontFamily: 'Raleway-Black'
+
+    },
+    appTextBold16: {
+        fontSize: 16,
+        color: white,
+        fontFamily: 'Raleway-SemiBold'
+
+    },
+    profilePhotoContainer: {
+        position: 'absolute',
+        justifyContent: 'flex-end',
+        right: -5,
+        top: 110
+    },
+    uploadIconStyle: {
+        width: 15,
+        height: 15,
+        tintColor: white
+    },
+    uploadBackStyle: {
+        width: 30,
+        height: 30,
+        backgroundColor:red,
+        borderRadius:15,
+        alignContent:'center',
+        position:'relative',
+       
+        alignItems:'center',justifyContent:'center'
+    }
+})
