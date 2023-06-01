@@ -61,7 +61,7 @@ const Home = () => {
                     data={products} renderItem={({ item, index }) => {
                         return (<View style={styles.productItems}>
                             <Image source={{ uri: item.image }} style={styles.itemImage} />
-                            <View style={{ marginHorizontal: 15}}>
+                            <View style={{ paddingHorizontal: 15,flexBasis:'80%'}}>
                                 <Text style={styles.name} numberOfLines={1} ellipsizeMode='tail'>{item.title.length > 30 ? item.title.substring(0, 30) + '....' : item.title}</Text>
                                 <Text style={styles.description} numberOfLines={2} ellipsizeMode='tail'>{item.description}</Text>
                                 <Text style={styles.price}>{'$' + item.price}</Text>
@@ -87,14 +87,16 @@ export default Home;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-marginHorizontal:20
+marginHorizontal:20,
+justifyContent:'space-between'
 
     },
     productItems: {
+     
         width: '100%',
         height: 150,
         marginTop: 10,
-        backgroundColor: white,
+    
         flexDirection: 'row',
         borderRadius: 10,
         elevation:5,
@@ -103,7 +105,8 @@ marginHorizontal:20
 
     },
     itemImage: {
-        width: '30%',
+        flexBasis:'20%',
+        // width: '30%',
         height: 150,
         alignSelf:'center'
 

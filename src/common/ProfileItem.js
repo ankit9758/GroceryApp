@@ -21,14 +21,14 @@ const ProfileItems = ({ title, leftIcon, onClick }) => {
 export default ProfileItems;
 const styles = StyleSheet.create({
   header: {
-    width: width,
+    // width: width,
     height: 56,
     backgroundColor: red,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15, flexDirection: 'row',
     borderRadius: 20,
-    marginEnd: 20,
+   marginEnd:20,
     marginTop: 10,
     marginStart: 20
   },
@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
   title: {
     color: white,
     fontSize: 20,
-    fontFamily: 'Raleway-Black'
+    fontFamily: 'Raleway-Black',
+    flex:1,paddingHorizontal:20
 
   },
   icon: {
