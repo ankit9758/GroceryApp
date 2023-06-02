@@ -2,7 +2,7 @@ import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Alert } fr
 import React,{useState} from 'react';
 import ProfileItems from '../../common/ProfileItem';
 import { white, black, red } from '../../../utils/color';
-import SimpleModal from '../../common/SimpleModal';
+import {SimpleModal} from '../../common/Dialogs';
 
 const Profile = () => {
     const[visible,setVisible]=useState(false)
@@ -120,7 +120,7 @@ const stylesProfile = StyleSheet.create({
         borderRadius:15,
         alignContent:'center',
         position:'relative',
-       
-        alignItems:'center',justifyContent:'center'
+        justifyContent:'center',
+        alignItems:'center'
     }
 })
