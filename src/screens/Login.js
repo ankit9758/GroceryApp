@@ -144,7 +144,15 @@ const Login = () => {
                     setEmail={setFogotPasswordEmail}
                     emailError={fogotPasswordEmailError}
                     setFogotPasswordEmailError={setFogotPasswordEmailError}
-                    onYesClick={(emailId) => { console.log('Email---' + emailId) }}
+                    onYesClick={(emailId) => {
+                        console.log('Email---' + emailId)
+                        setVisible(false)
+                        toastRef.current.show({
+                            type: 'warning',
+                            text: 'Please enter Email',
+                            duration: 2000
+                        });
+                    }}
                 />
             </SafeAreaView>
         </GestureHandlerRootView>
