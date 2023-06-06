@@ -13,6 +13,8 @@ import { ForgotPasswordModal } from "../common/Dialogs";
 import { isValidEmail, validateEmpty, validatePassword } from '../common/Validaton'
 import Toast from "../../utils/Toast";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import firestore from '@react-native-firebase/firestore';
+
 
 const Login = () => {
     const navigation = useNavigation();
@@ -43,6 +45,17 @@ const Login = () => {
     const clearErrors = () => {
         setEmailError('')
         setPasswordError('')
+    }
+    const checkLoginData = () => {
+       firestore().collection('Users').add({
+        email:email,
+        pass:password
+       }).then((data) => {
+        console.log(data);
+      }).catch((error)=>{
+        console.log(error)
+
+       })
     }
 
     return (
@@ -87,6 +100,7 @@ const Login = () => {
 
 
                         <AppButton title={'Login'} onPress={() => {
+                            
                             if (validateEmpty(email)) {
 
                                 setEmailError('Please enter Email')
@@ -102,7 +116,8 @@ const Login = () => {
                             else {
                                 setEmailError('')
                                 setPasswordError('')
-                                displayLoader()
+                                checkLoginData()
+                                //displayLoader()
                             }
 
 

@@ -4,7 +4,7 @@ import stylesApp from '../../utils/styles';
 import { white } from "../../utils/color";
 
 export default AppTextInput = ({ value, onChangeText, 
-  placeholder, type, icon,isLast,onSubmit,reference}) => (
+  placeholder, type, icon,isLast,onSubmit,reference,isPhone}) => (
   <View style={{
     width: '100%',
     height: 55,
@@ -23,6 +23,7 @@ export default AppTextInput = ({ value, onChangeText,
       secureTextEntry={type == 'password' ? true : false}
       numberOfLines={1} onChangeText={onChangeText}
        keyboardType={type ? type : 'default'} 
+       maxLength={isPhone? 10 :undefined}
       blurOnSubmit={false} onSubmitEditing={onSubmit}
       ref={reference}
       />
