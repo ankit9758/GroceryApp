@@ -34,3 +34,4 @@
      var re = /^[a-zA-Z]+$/i;
      return re.test(name);
    };
+   

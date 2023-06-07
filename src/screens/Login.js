@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     TouchableOpacity, Text, View,
     ScrollView, SafeAreaView, StatusBar, Image, StyleSheet, Keyboard
@@ -14,6 +14,8 @@ import { isValidEmail, validateEmpty, validatePassword } from '../common/Validat
 import Toast from "../../utils/Toast";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { USER_DATA } from "../../utils/AppConstant";
 
 
 const Login = () => {
@@ -34,6 +36,10 @@ const Login = () => {
     const toastRef = React.useRef(null)
 
 
+    useEffect(() => {
+        //getJSONFromAsyncStorage(USER_DATA)
+    })
+
     const displayLoader = () => {
         setLoading(true);
         setTimeout(() => {
@@ -43,19 +49,78 @@ const Login = () => {
     }
 
     const clearErrors = () => {
+        setEmail('')
+        setPassword('')
         setEmailError('')
         setPasswordError('')
     }
     const checkLoginData = () => {
-       firestore().collection('Users').add({
-        email:email,
-        pass:password
-       }).then((data) => {
-        console.log(data);
-      }).catch((error)=>{
-        console.log(error)
+        setLoading(true);
+        firestore().collection('Users').where
+            ('email', '==', email).get().then((querySnapshot) => {
+                console.log(querySnapshot.docs)
+                setLoading(false);
+                if (querySnapshot.docs.length > 0) {
+                    if (querySnapshot.docs[0]._data.email == email &&
+                        querySnapshot.docs[0]._data.password == password) {
+                        showSucessToast('User login sucessfully')
+                       console.log('dataa---',JSON.stringify(querySnapshot.docs[0]._data))
+                       saveJSONToAsyncStorage(USER_DATA,querySnapshot.docs[0]._data)
+                    } else {
+                        showErrorToast('Email or password is incorrect.')
+                    }
+                } else {
+                    showErrorToast('Account not found.')
+                }
+            }).catch((error) => {
+                setLoading(false);
+                console.log(error)
+                showErrorToast(error)
+              
+            })
+    }
 
-       })
+    const saveJSONToAsyncStorage = async (key, data) => {
+        try {
+          const jsonData = JSON.stringify(data);
+          await AsyncStorage.setItem(key, jsonData);
+          console.log('JSON value saved successfully.');
+        //   setTimeout(() => {
+           navigation.navigate('Main')
+        // }, 3000);
+         
+        } catch (error) {
+          console.log('Error saving JSON value:', error);
+        }
+      };
+
+
+    const getJSONFromAsyncStorage = async (key) => {
+        try {
+            const jsonData = await AsyncStorage.getItem(key);
+            if (jsonData !== null) {
+                const data = JSON.parse(jsonData);
+                console.log('Retrieved JSON value Login:', data);
+                navigation.navigate('Main')
+                return data;
+            }
+        } catch (error) {
+            console.log('Error retrieving JSON value:', error);
+        }
+    };
+    const showErrorToast = (msg) => {
+        toastRef.current.show({
+            type: 'error',
+            text: msg,
+            duration: 2000
+        });
+    }
+    const showSucessToast = (msg) => {
+        toastRef.current.show({
+            type: 'success',
+            text: msg,
+            duration: 2000
+        });
     }
 
     return (
@@ -100,7 +165,7 @@ const Login = () => {
 
 
                         <AppButton title={'Login'} onPress={() => {
-                            
+
                             if (validateEmpty(email)) {
 
                                 setEmailError('Please enter Email')
