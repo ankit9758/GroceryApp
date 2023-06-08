@@ -8,6 +8,7 @@ import Signup from './screens/Signup';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER_DATA } from '../utils/AppConstant';
+import OnBoardingScreen from './screens/Onboarding';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {
@@ -15,7 +16,7 @@ const AppNavigator = () => {
 
     useEffect(() => {
       getJSONFromAsyncStorage(USER_DATA)
-    },[initalRoute])
+    },[])
 
     const getJSONFromAsyncStorage = async (key) => {
         try {
@@ -24,13 +25,14 @@ const AppNavigator = () => {
                 console.log('Retrieved  Nav:', jsonData);
                 const data = JSON.parse(jsonData);
                 console.log('Retrieved JSON value App Nav:', data);
+             
                 setInitalRoute('Main')
+                
                 if(data['email']!==''){
-                    console.log('Retrieved JSON value Nav:', data.email);
+                    console.log('Retrieved JSON value Nav:', {initalRoute});
                    
                 }
-               
-                return data;
+              return data;
             }
         } catch (error) {
             console.log('Error retrieving JSON value:', error);
@@ -39,16 +41,24 @@ const AppNavigator = () => {
    
     return (
         <NavigationContainer >
-            {initalRoute==='Main'? <Stack.Navigator initialRouteName='Main' >
+            {initalRoute==='Onboarding'? 
+            
+            <Stack.Navigator initialRouteName='Onboarding' >
+                 <Stack.Screen name='Onboarding'  component={OnBoardingScreen}  
+            options={{headerShown:false,}}/>
         <Stack.Screen name='Signup'  component={Signup}  
             options={{headerShown:false,}}/>
+
             <Stack.Screen name='Main' component={Main} 
             options={{headerShown:false}}/>
                <Stack.Screen name='Login'  component={Login}  
             options={{headerShown:false,}}/>
           
-        </Stack.Navigator>:
-        <Stack.Navigator initialRouteName='Login' >
+        </Stack.Navigator>
+        :
+        <Stack.Navigator initialRouteName='Onboarding' >
+             <Stack.Screen name='Onboarding'  component={OnBoardingScreen}  
+            options={{headerShown:false,}}/>
         <Stack.Screen name='Signup'  component={Signup}  
             options={{headerShown:false,}}/>
             <Stack.Screen name='Main' component={Main} 

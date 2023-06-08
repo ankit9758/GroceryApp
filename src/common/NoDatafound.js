@@ -10,10 +10,10 @@ const NoDataFound = ({ description, btnText, onclick }) => {
             <Image source={require('../images/no_data.png')} style={styles.icon} />
             <Text style={styles.title}>{'No Data Found'}</Text>
             <Text style={styles.description}>{description}</Text>
-            <View style={{width:width-50}}>
-            <AppButton title={btnText} onPress={onclick}  />
+            <View style={{ width: width - 50 }}>
+                <AppButton title={btnText} onPress={onclick} />
             </View>
-            
+
         </View>
     );
 }
@@ -21,10 +21,11 @@ export default NoDataFound;
 
 const styles = StyleSheet.create({
     container: {
-        width: width,
-        height:height,
+        height: height,
+        alignContent: 'center',
         alignItems: 'center',
-        justifyContent:'center'
+        justifyContent: 'center',
+        alignSelf: 'center'
     },
 
     title: {
