@@ -339,6 +339,7 @@ const Signup = () => {
                             onChangeText={(text) => { setPhoneNumber(text.replace(/[^0-9]/g, '')) }}
                             reference={phoneNumberRef}
                             isPhone={true}
+                            maxLength={10}
                             onSubmit={() => passwordRef.current.focus()} />
                         {<Text style={[styleSignUp.errorText12]}>{phoneError}</Text>}
 

@@ -111,7 +111,6 @@ export default function OnBoardingScreen() {
                 <View style={{ marginTop: 10, flex: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity onPress={() => {
-
                             navigation.reset({
                                 key: 'Login',
                                 routes: [{ name: 'Login' }]

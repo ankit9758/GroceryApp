@@ -87,7 +87,6 @@ const stylesApp = StyleSheet.create({
     marginTop: 10,
     fontFamily: 'Raleway-Medium',
     textAlign: 'center',
-  
     justifyContent:'center'
 
   },

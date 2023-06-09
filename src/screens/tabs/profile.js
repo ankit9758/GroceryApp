@@ -84,7 +84,7 @@ const Profile = () => {
                     <Text style={[stylesProfile.appTextBold16, { alignSelf: 'center', marginTop: 5, paddingHorizontal: 20 }]}>Phone : {phone} </Text>
 
                     <View style={{ marginTop: 30, marginBottom: 80 }}>
-                        <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { console.log('Hello') }} />
+                        <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { navigation.navigate('SavedAddress')}} />
                         <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Orders'} onClick={() => { console.log('Hello') }} />
                         <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { console.log('Hello') }} />
                         <ProfileItems leftIcon={require('../../images/logout.png')} title={'Log out'} onClick={() => { setVisible(true) }} />
