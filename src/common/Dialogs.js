@@ -99,7 +99,8 @@ const stylesModal = StyleSheet.create({
     appTextBold18: {
         fontSize: 18,
         color: black,
-        fontFamily: 'Raleway-Regular'
+        fontFamily: 'Raleway-Regular',
+        textAlign:'center'
 
 
     },
