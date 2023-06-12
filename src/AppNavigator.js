@@ -11,6 +11,7 @@ import { USER_DATA } from '../utils/AppConstant';
 import OnBoardingScreen from './screens/Onboarding';
 import SavedAddress from './screens/SavedAddress';
 import AddAddress from './screens/AddAddress';
+import ProductDetails from './screens/ProductDetails';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {
@@ -60,6 +61,9 @@ const AppNavigator = () => {
                     options={{ headerShown: false }} />
 
                 <Stack.Screen name='AddAddress' component={AddAddress}
+                    options={{ headerShown: false }} />
+
+                <Stack.Screen name='ProductDetails' component={ProductDetails}
                     options={{ headerShown: false }} />
             </Stack.Navigator>
 

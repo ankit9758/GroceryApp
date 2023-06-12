@@ -19,7 +19,8 @@ const HomeScreen = () => {
             <Header
                 leftIcon={require('../images/menu.png')}
                 rightIcon={require('../images/cart.png')}
-                title={'Grocery App'}
+                title={
+                selectedTab == 3?'Wishlist':'Grocery App'}
                 onClickLeftIcon={
                     () => navigation.openDrawer()
                 } />
