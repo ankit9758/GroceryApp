@@ -10,6 +10,7 @@ import AppButton from "../common/AppButton";
 import { useDispatch } from "react-redux";
 import { black, white, red, transparent, green } from "../../utils/color";
 import { addItemToWishList } from "../redux/slices/Wishlistslice";
+import { addItemToCart } from "../redux/slices/CartSlice";
 
 const ProductDetails = () => {
     const navigation = useNavigation()
@@ -38,7 +39,7 @@ const ProductDetails = () => {
                 <Text style={styles.name}>{route.params.data.title}</Text>
                 <Text style={styles.description}>{route.params.data.description}</Text>
                 <Text style={styles.price}>{'$' + route.params.data.price}</Text>
-                <AppButton title={'Add To Cart'} onPress={() => { console.log('Added to cart') }} />
+                <AppButton title={'Add To Cart'} onPress={() => { disptach(addItemToCart(route.params.data))}} />
                 <View style={styles.profilePhotoContainer}>
                     <TouchableOpacity
                         onPress={() => disptach(addItemToWishList(route.params.data))

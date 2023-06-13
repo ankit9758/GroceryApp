@@ -52,7 +52,8 @@ const SavedAddress = () => {
             title={'Saved Adresses'}
             onClickLeftIcon={
                 () => navigation.goBack()
-            } />
+            } isCartScreen={false}  
+            />
 
         <View style={{ flex: 1, backgroundColor: '#36454F', padding: 20 }}>
             {loading ? (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

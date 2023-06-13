@@ -12,6 +12,7 @@ import OnBoardingScreen from './screens/Onboarding';
 import SavedAddress from './screens/SavedAddress';
 import AddAddress from './screens/AddAddress';
 import ProductDetails from './screens/ProductDetails';
+import Cart from './screens/Cart';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {
@@ -50,7 +51,7 @@ const AppNavigator = () => {
                 <Stack.Screen name='Onboarding' component={OnBoardingScreen}
                     options={{ headerShown: false }} />
                 <Stack.Screen name='Signup' component={Signup}
-                    options={{ headerShown: false}} />
+                    options={{ headerShown: false }} />
 
                 <Stack.Screen name='Main' component={Main}
                     options={{ headerShown: false }} />
@@ -64,6 +65,8 @@ const AppNavigator = () => {
                     options={{ headerShown: false }} />
 
                 <Stack.Screen name='ProductDetails' component={ProductDetails}
+                    options={{ headerShown: false }} />
+                <Stack.Screen name='Cart' component={Cart}
                     options={{ headerShown: false }} />
             </Stack.Navigator>
 

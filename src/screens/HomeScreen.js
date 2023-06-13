@@ -23,7 +23,11 @@ const HomeScreen = () => {
                 selectedTab == 3?'Wishlist':'Grocery App'}
                 onClickLeftIcon={
                     () => navigation.openDrawer()
-                } />
+                } 
+                onclickRightIcon={
+                    () => navigation.navigate('Cart')
+                } 
+                />
             <View style={{ flex: 1,marginBottom:70 }}>
                 {selectedTab == 0 ? (<Home />) : selectedTab == 1 ? (<Search />) : selectedTab == 2 ? (<Add />) : selectedTab == 3 ? (<WishList />) : (<Profile />)}
             </View>

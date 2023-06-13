@@ -50,6 +50,7 @@ const stylesApp = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     marginVertical: 10,
+    elevation:5
   },
   indicator: {
     height: 2.5,

@@ -42,7 +42,7 @@ const AddAddress = () => {
             title={route.params.types === 'edit' ? 'Edit Address' : 'Add New Adresses'}
             onClickLeftIcon={
                 () => navigation.goBack()
-            } />
+            }  isCartScreen={false} />
         <View style={{ flex: 1, padding: 20, backgroundColor: white }}>
             <AppTextInput placeholder={'Enter state'} type={'default'}
                 icon={image_state} isLast={false} value={state}
