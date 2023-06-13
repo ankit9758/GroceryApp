@@ -8,12 +8,17 @@ import AppTextInput from "../common/AppTextInput";
 import AppButton from "../common/AppButton";
 import { useNavigation } from '@react-navigation/native'
 import OverlayActivityIndicator from "../common/Loader";
-import { isValidEmail, validateEmpty, validatePassword,validateName,validateNumber } from '../common/Validaton'
+import { isValidEmail, validateEmpty, validatePassword, validateName, validateNumber } from '../common/Validaton'
 import Toast from "../../utils/Toast";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Modal from "react-native-modal";
 import ImagePicker from 'react-native-image-crop-picker';
 import { request, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
+import firestore from '@react-native-firebase/firestore';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { USER_DATA } from "../../utils/AppConstant";
+import storage from '@react-native-firebase/storage';
 
 
 
@@ -52,7 +57,83 @@ const Signup = () => {
 
     const toastRef = React.useRef(null)
 
+    const checkEmailAndSaveUserData = () => {
+        setLoading(true);
+        firestore().collection('Users').where
+            ('email', '==', email).get().then((querySnapshot) => {
+                console.log(querySnapshot.docs)
+                if (querySnapshot.docs.length > 0) {
+                    setLoading(false);
+                    showErrorToast('Email is already exist.')
+                } else {
+                    saveUserData()
+                }
+            }).catch((error) => {
+                setLoading(false);
+                console.log(error)
+                showErrorToast(error)
+            })
+    }
 
+    const saveUserData = () => {
+        firestore().collection('Users').add({
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phone,
+            email: email,
+            password: password,
+            imaegPath:imageUri
+        }).then((data) => {
+            setLoading(false);
+            showSucessToast('User Added Sucessfully.')
+            console.log(data);
+            saveJSONToAsyncStorage(USER_DATA,
+                {
+                'firstName': `${firstName}`,
+                'lastName': `${lastName}`,
+                'phoneNumber': `${phone}`,
+                'email': `${email}`,
+                'imagePath': `${imageUri}`,
+                'password': `${password}`,
+              })
+           
+        
+        }).catch((error) => {
+            setLoading(false);
+            showErrorToast(error)
+            console.log(error)
+
+        })
+    }
+    const saveJSONToAsyncStorage = async (key, data) => {
+        try {
+            const jsonData = JSON.stringify(data);
+            await AsyncStorage.setItem(key, jsonData);
+            console.log('JSON value saved successfully.');
+            //   setTimeout(() => {
+            navigation.navigate('Main')
+            // }, 3000);
+
+        } catch (error) {
+            console.log('Error saving JSON value:', error);
+        }
+    };
+
+
+    const showErrorToast = (msg) => {
+        toastRef.current.show({
+            type: 'error',
+            text: msg,
+            duration: 2000
+        });
+    }
+    const showSucessToast = (msg) => {
+        toastRef.current.show({
+            type: 'success',
+            text: msg,
+            duration: 2000
+        });
+    }
     const displayLoader = () => {
         setLoading(true);
         setTimeout(() => {
@@ -77,7 +158,7 @@ const Signup = () => {
             cropping: true,
         }).then(image => {
             setShowCameraGallery(false)
-            console.log(image.path)
+            console.log(image)
             setImageUri(image.path);
         });
     };
@@ -87,13 +168,37 @@ const Signup = () => {
             height: 400,
             cropping: true,
             cropperCircleOverlay: true
-        })
-            .then(image => {
+        }).then(image => {
                 setShowCameraGallery(false)
-                setImageUri(image.path);
-                console.log(image.path)
+                // setImageUri(image.path);
+                console.log(image)
+                uploadImage(image.path)
             })
             .finally(close);
+    };
+
+    const uploadImage = async (imagePath) => {
+        setLoading(true)
+        const fileName=imagePath.substring(imagePath.lastIndexOf('/') + 1)
+        const reference = storage().ref(fileName)
+        const pathToFile = imagePath
+        //upload file 
+        await reference.putFile(pathToFile).then(()=>{
+            getImagePath(fileName)
+        }).catch((error)=>{
+            setLoading(false)
+            showErrorToast(error)
+        });
+    };
+    const getImagePath = async (fileName) => {
+        const url = await storage().ref(fileName).getDownloadURL().then((data)=>{
+            setLoading(false)
+            setImageUri(data)
+            // console.log(data)
+        }).catch((error)=>{
+            setLoading(false)
+            showErrorToast(error)
+        });
     };
 
 
@@ -153,7 +258,7 @@ const Signup = () => {
             'Permission Required',
             'To use the camera, you need to grant camera access. Please go to app settings and enable the camera permission.',
             [
-                { text: 'Cancel', style: 'cancel' ,onPress:openCancel},
+                { text: 'Cancel', style: 'cancel', onPress: openCancel },
                 { text: 'Open Settings', onPress: openAppSettings },
             ]
         );
@@ -179,7 +284,6 @@ const Signup = () => {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaView >
                 <Toast ref={toastRef} />
-
                 <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} />
                 {loading && <OverlayActivityIndicator />}
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -235,6 +339,7 @@ const Signup = () => {
                             onChangeText={(text) => { setPhoneNumber(text.replace(/[^0-9]/g, '')) }}
                             reference={phoneNumberRef}
                             isPhone={true}
+                            maxLength={10}
                             onSubmit={() => passwordRef.current.focus()} />
                         {<Text style={[styleSignUp.errorText12]}>{phoneError}</Text>}
 
@@ -262,17 +367,17 @@ const Signup = () => {
 
 
                         <AppButton title={'Create Account'} onPress={() => {
-                             if (validateEmpty(firstName)) {
+                            if (validateEmpty(firstName)) {
                                 setFirstNameError('Please enter first name')
                             } else if (!validateName(firstName)) {
                                 setFirstNameError('Please enter valid first name')
-                            }else  if (validateEmpty(lastName)) {
+                            } else if (validateEmpty(lastName)) {
                                 setFirstNameError('')
                                 setLastNameError('Please enter last name')
                             } else if (!validateName(lastName)) {
                                 setFirstNameError('')
                                 setLastNameError('Please enter valid last name')
-                            }else if (validateEmpty(email)) {
+                            } else if (validateEmpty(email)) {
                                 setFirstNameError('')
                                 setLastNameError('')
                                 setEmailError('Please enter Email')
@@ -281,7 +386,7 @@ const Signup = () => {
                                 setLastNameError('')
                                 setEmailError('Please enter valid email')
                             }
-                            else  if (validateEmpty(phone)) {
+                            else if (validateEmpty(phone)) {
                                 setFirstNameError('')
                                 setLastNameError('')
                                 setEmailError('')
@@ -291,20 +396,41 @@ const Signup = () => {
                                 setLastNameError('')
                                 setEmailError('')
                                 setPhoneError('Please enter valid phone number')
-                            }else if (validateEmpty(password)) {
+                            } else if (validateEmpty(password)) {
                                 setFirstNameError('')
+                                setLastNameError('')
                                 setEmailError('')
+                                setPhoneError('')
                                 setPasswordError('Please enter password')
                             } else if (!validatePassword(password)) {
                                 setFirstNameError('')
+                                setLastNameError('')
                                 setEmailError('')
+                                setPhoneError('')
                                 setPasswordError('Please enter valid password')
+                            } else if (validateEmpty(confirmPassword)) {
+                                setFirstNameError('')
+                                setLastNameError('')
+                                setEmailError('')
+                                setPhoneError('')
+                                setPasswordError('')
+                                setConfirmPasswordError('Please enter confirm password')
+                            } else if (password !== confirmPassword) {
+                                setFirstNameError('')
+                                setLastNameError('')
+                                setEmailError('')
+                                setPhoneError('')
+                                setPasswordError('')
+                                setConfirmPasswordError('confirm password and password must be same.')
                             }
                             else {
                                 setFirstNameError('')
+                                setLastNameError('')
                                 setEmailError('')
+                                setPhoneError('')
                                 setPasswordError('')
-                                displayLoader()
+                                setConfirmPasswordError('')
+                                checkEmailAndSaveUserData()
                             }
 
                         }} />

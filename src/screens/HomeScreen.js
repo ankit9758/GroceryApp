@@ -19,23 +19,26 @@ const HomeScreen = () => {
             <Header
                 leftIcon={require('../images/menu.png')}
                 rightIcon={require('../images/cart.png')}
-                title={'Grocery App'}
+                title={
+                selectedTab == 3?'Wishlist':'Grocery App'}
                 onClickLeftIcon={
                     () => navigation.openDrawer()
                 } />
+            <View style={{ flex: 1,marginBottom:70 }}>
+                {selectedTab == 0 ? (<Home />) : selectedTab == 1 ? (<Search />) : selectedTab == 2 ? (<Add />) : selectedTab == 3 ? (<WishList />) : (<Profile />)}
+            </View>
 
-            {selectedTab == 0 ? (<Home />) : selectedTab == 1 ? (<Search />) : selectedTab == 2 ? (<Add />) : selectedTab == 3 ? (<WishList />) : (<Profile />)}
-      
-         
-         {/* <View style={{backgroundColor:green ,alignSelf:'center', position:'absolute',width:70,height:70,borderRadius:35,zIndex:1,alignContent:'center',justifyContent:'center'}}>
+
+
+            {/* <View style={{backgroundColor:green ,alignSelf:'center', position:'absolute',width:70,height:70,borderRadius:35,zIndex:1,alignContent:'center',justifyContent:'center'}}>
          <TouchableOpacity style={[styles.bottomTab,{shadowOffset:{x:2,y:0},shadowRadius:2,borderRadius:30,position:'absolute',shadowOpacity:5.0,shadowColor:'blue',bottom:20,
          right:0,top:5,left:5,justifyContent:'center',alignItems:'center',alignContent:'center'}]} onPress={() => setSelectedTab(2)}>
                     <Image source={require('../images/plus.png')} style={styles.bottomTabIcon} />
                     {/* <Text style={[styles.appTextBold14, { fontFamily: selectedTab == 2 ? 'Raleway-Black' : 'Raleway-Regular' }]}>Add</Text> */}
-                {/* </TouchableOpacity>
-         </View> */} 
-         
-         <View style={styles.bottomView}>
+            {/* </TouchableOpacity>
+         </View> */}
+
+            <View style={styles.bottomView}>
                 <TouchableOpacity style={styles.bottomTab} onPress={() => setSelectedTab(0)}>
                     <Image source={selectedTab == 0 ? require('../images/home_filled.png') : require('../images/home.png')} style={styles.bottomTabIcon} />
                     <Text style={[styles.appTextBold14, { fontFamily: selectedTab == 0 ? 'Raleway-Black' : 'Raleway-Regular' }]}>Home</Text>
@@ -44,12 +47,14 @@ const HomeScreen = () => {
                     <Image source={require('../images/magnifying_glass.png')} style={styles.bottomTabIcon} />
                     <Text style={[styles.appTextBold14, { fontFamily: selectedTab == 1 ? 'Raleway-Black' : 'Raleway-Regular' }]}>Search</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.bottomTab,{position:'relative',bottom:20}]} onPress={() => setSelectedTab(2)}>
-                    <View style={{width:60,height:60,borderRadius:60/2,backgroundColor:white,alignItems:'center',marginBottom:20,
-                    justifyContent:'center',alignContent:'center',shadowOpacity:5.0,shadowColor:green,shadowRadius:2,shadowOffset:{x:2,y:0}}}>
-                    <Image source={require('../images/plus.png')} style={[styles.bottomTabIcon,{tintColor:red}]} />
+                <TouchableOpacity style={[styles.bottomTab, { position: 'relative', bottom: 20 }]} onPress={() => setSelectedTab(2)}>
+                    <View style={{
+                        width: 60, height: 60, borderRadius: 60 / 2, backgroundColor: white, alignItems: 'center', marginBottom: 20,
+                        justifyContent: 'center', alignContent: 'center', shadowOpacity: 5.0, shadowColor: green, shadowRadius: 2, shadowOffset: { x: 2, y: 0 }
+                    }}>
+                        <Image source={require('../images/plus.png')} style={[styles.bottomTabIcon, { tintColor: red }]} />
                     </View>
-                   
+
                     {/* <Text style={[styles.appTextBold14, { fontFamily: selectedTab == 2 ? 'Raleway-Black' : 'Raleway-Regular' }]}>Add</Text> */}
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bottomTab} onPress={() => setSelectedTab(3)}>
@@ -61,8 +66,8 @@ const HomeScreen = () => {
                     <Text style={[styles.appTextBold14, { fontFamily: selectedTab == 4 ? 'Raleway-Black' : 'Raleway-Regular' }]}>Profile</Text>
                 </TouchableOpacity>
             </View>
-         
-           
+
+
         </SafeAreaView>
     );
 }
@@ -91,8 +96,8 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        alignContent:'center',
-        
+        alignContent: 'center',
+
 
 
     },
@@ -105,10 +110,10 @@ const styles = StyleSheet.create({
     appTextBold14: {
         fontSize: 14,
         color: white,
-        textShadowRadius:10,
-        borderWidth:2,
-        textShadowOffset:{width:5,height:5},
-        borderColor:white
+        textShadowRadius: 10,
+        borderWidth: 2,
+        textShadowOffset: { width: 5, height: 5 },
+        borderColor: white
 
 
     },

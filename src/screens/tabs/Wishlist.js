@@ -1,10 +1,17 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import stylesApp from '../../../utils/styles';
+import { useSelector } from "react-redux";
+
 const WishList = () => {
+    const wishList = useSelector(state => state.wishlists)
+    useEffect(() => {
+        console.log('yoooooooo',wishList)
+    })
+
     return (
         <View>
-            <Text style={stylesApp.appTextBold20}>WishList</Text>
+            <Text >WishList</Text>
         </View>
     );
 }

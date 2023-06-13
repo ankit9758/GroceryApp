@@ -34,3 +34,9 @@
      var re = /^[a-zA-Z]+$/i;
      return re.test(name);
    };
+   export const validateAddress = (name: string) => {
+     var re = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/
+     console.log(name,re.test(name))
+     return re.test(name.trim());
+   };
+   

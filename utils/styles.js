@@ -51,7 +51,45 @@ const stylesApp = StyleSheet.create({
     paddingHorizontal: 12,
     marginVertical: 10,
   },
+  indicator: {
+    height: 2.5,
+    width: 10,
+    borderRadius: 2,
+    marginHorizontal: 3,
+    backgroundColor: 'grey'
 
+  },
+  btn: {
+    height: 50,
+    flex: 1,
+    borderRadius: 5,
+    marginHorizontal: 3,
+    backgroundColor: 'white',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf:'center',
+    justifyContent:'center'
+
+
+  },
+
+  title: {
+    fontSize: 22,
+    color: red,
+    marginTop: 20,
+    fontFamily: 'Raleway-Black',
+    textAlign: 'center',
+    justifyContent:'center'
+  },
+  subTitle: {
+    fontSize: 13,
+    color: red,
+    marginTop: 10,
+    fontFamily: 'Raleway-Medium',
+    textAlign: 'center',
+    justifyContent:'center'
+
+  },
 })
 
 export default stylesApp;
