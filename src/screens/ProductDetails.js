@@ -9,13 +9,23 @@ import { image_add_wishlist, image_back, image_cart, image_wishlist } from "../.
 import AppButton from "../common/AppButton";
 import { useDispatch } from "react-redux";
 import { black, white, red, transparent, green } from "../../utils/color";
-import { addItemToWishList } from "../redux/slices/Wishlistslice";
+import { addItemToWishList, removeItemFromWishList } from "../redux/slices/Wishlistslice";
 import { addItemToCart } from "../redux/slices/CartSlice";
+import { likeDislikeProducts } from "../redux/slices/ProductSlice";
 
 const ProductDetails = () => {
     const navigation = useNavigation()
     const route = useRoute()
     const disptach = useDispatch();
+    const [productDetail, setProductDetail] = useState({})
+    const [val, setval] = useState()
+
+    const ref = useRef()
+    useEffect(() => {
+        console.log('useEffect')
+        console.log("hello", route.params.data)
+        setProductDetail(route.params.data)
+    }, [])
 
     return (<SafeAreaView style={styles.container}>
         <StatusBar backgroundColor={red} />
@@ -35,18 +45,37 @@ const ProductDetails = () => {
         />
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ backgroundColor: white, flex: 1, paddingHorizontal: 20, paddingVertical: 50 }}>
-                <Image source={{ uri: route.params.data.image }} style={styles.itemImage} resizeMode="center" />
-                <Text style={styles.name}>{route.params.data.title}</Text>
-                <Text style={styles.description}>{route.params.data.description}</Text>
-                <Text style={styles.price}>{'$' + route.params.data.price}</Text>
-                <AppButton title={'Add To Cart'} onPress={() => { disptach(addItemToCart(route.params.data))}} />
-                <View style={styles.profilePhotoContainer}>
+                <Image source={{ uri: productDetail.image }} style={styles.itemImage} resizeMode="center" />
+                <Text style={styles.name}>{productDetail.title}</Text>
+                <Text style={styles.description}>{productDetail.description}</Text>
+                <Text style={styles.price}>{'$' + productDetail.price}</Text>
+                <AppButton title={'Add To Cart'} onPress={() => { disptach(addItemToCart(productDetail)) }} />
+                <View
+                    ref={ref}
+                    style={styles.profilePhotoContainer}>
                     <TouchableOpacity
-                        onPress={() => disptach(addItemToWishList(route.params.data))
+                        onPress={() => {
+                            if (productDetail.isOnWishlist) {
+                                disptach(likeDislikeProducts(productDetail.id))
+                                disptach(removeItemFromWishList(productDetail))
+                            } else {
+                                disptach(likeDislikeProducts(productDetail.id))
+                                disptach(addItemToWishList(productDetail))
+                            }
+                            console.log('Product--1', productDetail)
+                            productDetail.isOnWishlist = !productDetail.isOnWishlist
+                            //  productDetail.title="ankit"
+                            console.log('Product--2', productDetail)
+                            setProductDetail(productDetail)
+                            setval(productDetail.isOnWishlist)
+                            console.log('Product--3', productDetail)
+
+                        }
+
                         }>
                         <View style={styles.uploadBackStyle}>
                             <Image
-                                source={image_add_wishlist}
+                                source={productDetail.isOnWishlist ? image_wishlist : image_add_wishlist}
                                 style={styles.uploadIconStyle}
                             />
                         </View>
@@ -139,7 +168,7 @@ const styles = StyleSheet.create({
     description: {
         marginTop: 20,
         fontSize: 14,
-        color: 'grey',
+        color: 'black',
         fontFamily: 'Raleway-Regular',
 
     },

@@ -25,6 +25,9 @@ const WishList = () => {
     const disptach = useDispatch();
 
     useEffect(() => {
+        wishList.data.map(item => {
+            item.isOnWishlist = true
+        })
         console.log(wishList)
         setTimeout(() => {
             setLoading(false)

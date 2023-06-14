@@ -7,17 +7,23 @@ export const WishlistSlice = createSlice({
    },
    reducers: {
       addItemToWishList(state, action) {
-         state.data.push(action.payload)
+
+         if (state.data.id !== action.payload.id) {
+            state.data.push(action.payload)
+         }
+
          // console.log('Heooooo', JSON.stringify(state.data))
       },
       removeItemFromWishList(state, action) {
+
          let newArr = state.data.filter(item => {
-            return item.id !== action.payload
+            return item.id !== action.payload.id
          })
+
          state.data = newArr
       },
    }
 
 })
-export const { addItemToWishList,removeItemFromWishList } = WishlistSlice.actions
+export const { addItemToWishList, removeItemFromWishList } = WishlistSlice.actions
 export default WishlistSlice.reducer

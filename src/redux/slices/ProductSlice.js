@@ -20,7 +20,7 @@ export const ProductSlice = createSlice({
             return item
          })
         
-        console.log('ProductSlice',state.data)
+      //  console.log('ProductSlice',state.data)
       },
      
    }
