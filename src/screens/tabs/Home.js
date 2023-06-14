@@ -10,35 +10,45 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { image_wishlist } from '../../../utils/images';
 import { image_add_wishlist } from '../../../utils/images';
 import { addItemToWishList, removeItemFromWishList } from '../../redux/slices/Wishlistslice';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addProducts, likeDislikeProducts } from '../../redux/slices/ProductSlice';
 
 
 const Home = () => {
     const navigation = useNavigation()
     const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const disptach = useDispatch();
 
+    const productList = useSelector(state => state.productData)
+
+
 
     useEffect(() => {
-       
-      getProducts()
-
-    },[])
+        //getProducts()
+        // console.log('redux..'+productList.data.length,productList.data)
+        if (productList.data.length == 0) {
+            getProducts()
+        }
+        // else{
+        //     setProducts(productList.data)
+        // }
+    }, [])
 
 
     const getProducts = () => {
-
+    setLoading(true)
         callApiWithoutParams('GET', PRODUCTS)
             .then((response) => {
                 setLoading(false)
                 response.data.map(item => {
                     item.isOnWishlist = false
                 })
-                setProducts(response.data)
+               // setProducts(response.data)
+                disptach(addProducts(response.data))
                 setRefreshing(false);
-           
+
                 //console.log('Okkkkkkkkkkkkkk', response.data)
             })
             .catch((error) => {
@@ -64,7 +74,7 @@ const Home = () => {
 
 
     return (
-        
+
         <View style={styles.container}>
             {loading ? (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size={70} color="#0000ff" />
@@ -74,7 +84,7 @@ const Home = () => {
                         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
                     }
 
-                    data={products} renderItem={({ item, index }) => {
+                    data={productList.data} renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity onPress={() => {
                                 console.log('Hrllo')
@@ -86,13 +96,13 @@ const Home = () => {
                                         onPress={() => {
 
                                             if (item.isOnWishlist) {
-                                                item.isOnWishlist = false
+                                               // item.isOnWishlist = false
                                                 disptach(removeItemFromWishList(item))
                                             } else {
-                                                item.isOnWishlist = true
+                                                //item.isOnWishlist = true
                                                 disptach(addItemToWishList(item))
                                             }
-
+                                            disptach(likeDislikeProducts(item.id))
                                         }
                                         }>
                                         <View style={styles.wishListBackStyle}>
@@ -103,9 +113,9 @@ const Home = () => {
                                         </View>
 
                                     </TouchableOpacity>
-                                    <View style={{ paddingHorizontal: 15, flexBasis: '80%' }}>
+                                    <View style={{ paddingStart: 10, flex:1 }}>
                                         <Text style={styles.name} numberOfLines={1} ellipsizeMode='tail'>{item.title.length > 30 ? item.title.substring(0, 30) + '....' : item.title}</Text>
-                                        <Text style={styles.description} numberOfLines={2} ellipsizeMode='tail'>{item.description}</Text>
+                                        <Text style={styles.description} numberOfLines={3} ellipsizeMode='tail'>{item.description}</Text>
                                         <Text style={styles.price}>{'$' + item.price}</Text>
                                     </View>
 
@@ -156,7 +166,6 @@ const styles = StyleSheet.create({
     },
     productItems: {
 
-        width: '100%',
         height: 150,
         marginTop: 10,
 
@@ -168,8 +177,8 @@ const styles = StyleSheet.create({
 
     },
     itemImage: {
-        flexBasis: '20%',
-        // width: '30%',
+       // flexBasis: '25%',
+         width: '25%',
         height: 150,
         alignSelf: 'center'
 

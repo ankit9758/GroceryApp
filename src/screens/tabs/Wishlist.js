@@ -12,6 +12,8 @@ import { image_back, image_edit, image_delete, image_wishlist, image_add_wishlis
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { removeItemFromWishList } from "../../redux/slices/Wishlistslice";
 import { useDispatch } from "react-redux";
+import { likeDislikeProducts } from "../../redux/slices/ProductSlice";
+
 
 
 const WishList = () => {
@@ -40,7 +42,7 @@ const WishList = () => {
         <StatusBar backgroundColor={red} />
 
 
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1 }}>
             {loading ? (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size={70} color="#0000ff" />
             </View>) : (
@@ -55,19 +57,22 @@ const WishList = () => {
                                 <View style={styles.productItems}>
                                     <Image source={{ uri: item.image }} style={styles.itemImage} />
                                     <TouchableOpacity
-                                        onPress={() =>
-                                            disptach(removeItemFromWishList(item.id))}>
+                                        onPress={() => {
+                                            disptach(likeDislikeProducts(item.id))
+                                            disptach(removeItemFromWishList(item.id))
+                                        }
+                                        }>
                                         <View style={styles.wishListBackStyle}>
                                             <Image
-                                                source={item.isOnWishlist ? image_wishlist : image_add_wishlist}
+                                                source={image_wishlist}
                                                 style={styles.wishlistStyle}
                                             />
                                         </View>
 
                                     </TouchableOpacity>
-                                    <View style={{ paddingHorizontal: 15, flexBasis: '80%' }}>
+                                    <View style={{ paddingHorizontal: 15, flex: 1 }}>
                                         <Text style={styles.name} numberOfLines={1} ellipsizeMode='tail'>{item.title.length > 30 ? item.title.substring(0, 30) + '....' : item.title}</Text>
-                                        <Text style={styles.description} numberOfLines={2} ellipsizeMode='tail'>{item.description}</Text>
+                                        <Text style={styles.description} numberOfLines={3} ellipsizeMode='tail'>{item.description}</Text>
                                         <Text style={styles.price}>{'$' + item.price}</Text>
                                     </View>
 
@@ -75,7 +80,7 @@ const WishList = () => {
                             </TouchableOpacity>
                         )
                     }
-                    }image_add_wishlist
+                    } image_add_wishlist
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
 
@@ -121,7 +126,7 @@ const styles = StyleSheet.create({
     productItems: {
 
         width: '100%',
-        height: 150,
+
         marginTop: 10,
         flexDirection: 'row',
         borderRadius: 10,

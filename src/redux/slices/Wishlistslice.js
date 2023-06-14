@@ -8,7 +8,7 @@ export const WishlistSlice = createSlice({
    reducers: {
       addItemToWishList(state, action) {
          state.data.push(action.payload)
-         console.log('Heooooo', JSON.stringify(state.data))
+         // console.log('Heooooo', JSON.stringify(state.data))
       },
       removeItemFromWishList(state, action) {
          let newArr = state.data.filter(item => {

@@ -13,6 +13,7 @@ import SavedAddress from './screens/SavedAddress';
 import AddAddress from './screens/AddAddress';
 import ProductDetails from './screens/ProductDetails';
 import Cart from './screens/Cart';
+import ChangePassword from './screens/ChangePassword';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {
@@ -67,6 +68,8 @@ const AppNavigator = () => {
                 <Stack.Screen name='ProductDetails' component={ProductDetails}
                     options={{ headerShown: false }} />
                 <Stack.Screen name='Cart' component={Cart}
+                    options={{ headerShown: false }} />
+                     <Stack.Screen name='ChangePassword' component={ChangePassword}
                     options={{ headerShown: false }} />
             </Stack.Navigator>
 

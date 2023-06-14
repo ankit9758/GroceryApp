@@ -5,8 +5,10 @@ const { height, width } = Dimensions.get('window');
 import { useSelector } from "react-redux";
 
 const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onclickRightIcon, isCartScreen }) => {
-  const cardData = useSelector(state => state.cartData)
-  console.log('cart', cardData)
+  
+const cardData = useSelector(state => state.cartData)
+
+//console.log('cart', cardData)
   return (
     <View style={styles.header}>
       <TouchableOpacity style={styles.btn} onPress={() => onClickLeftIcon()}>

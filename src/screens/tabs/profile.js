@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER_DATA } from '../../../utils/AppConstant';
 
 import { useNavigation } from '@react-navigation/native'
+import { image_logout, image_password } from '../../../utils/images';
 
 const Profile = () => {
     const [visible, setVisible] = useState(false)
@@ -41,7 +42,6 @@ const Profile = () => {
             const jsonData = await AsyncStorage.getItem(key);
             if (jsonData !== null) {
                 const data = JSON.parse(jsonData);
-                console.log('Retrieved JSON value123:', data);
                 setName(data['firstName'] + ' ' + data['lastName'])
                 setPhoneNumber(data['phoneNumber']);
                 setEmail(data['email']);
@@ -86,8 +86,9 @@ const Profile = () => {
                     <View style={{ marginTop: 30, marginBottom: 80 }}>
                         <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { navigation.navigate('SavedAddress')}} />
                         <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Orders'} onClick={() => { console.log('Hello') }} />
+                        <ProfileItems leftIcon={image_password} title={'Change Password '} onClick={() => { navigation.navigate('ChangePassword') }} />
                         <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { console.log('Hello') }} />
-                        <ProfileItems leftIcon={require('../../images/logout.png')} title={'Log out'} onClick={() => { setVisible(true) }} />
+                        <ProfileItems leftIcon={image_logout} title={'Log out'} onClick={() => { setVisible(true) }} />
                     </View>
 
 
