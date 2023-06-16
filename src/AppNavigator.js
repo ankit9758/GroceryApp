@@ -14,14 +14,19 @@ import AddAddress from './screens/AddAddress';
 import ProductDetails from './screens/ProductDetails';
 import Cart from './screens/Cart';
 import ChangePassword from './screens/ChangePassword';
+import Splash from './screens/Splash';
+import ChatList from './screens/ChatList';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {
-    const [initalRoute, setInitalRoute] = useState('Login')
+    // let  initalRoute='Onboarding'
+    const [initalRoute,setInitalRoute]=useState('')
+    //const [initalRoute, setInitalRoute] = useState('Onboarding')
+    const [isLoginchecked, setIsLoginChecked] = useState(false)
 
     useEffect(() => {
         getJSONFromAsyncStorage(USER_DATA)
-    }, [])
+    }, [isLoginchecked])
 
     const getJSONFromAsyncStorage = async (key) => {
         try {
@@ -31,29 +36,44 @@ const AppNavigator = () => {
                 const data = JSON.parse(jsonData);
                 console.log('Retrieved JSON value App Nav:', data);
 
+                // initalRoute='Main'
                 setInitalRoute('Main')
 
                 if (data['email'] !== '') {
                     console.log('Retrieved JSON value Nav:', { initalRoute });
 
                 }
+                setIsLoginChecked(true)
                 return data;
+            } else {
+                setInitalRoute('Onboarding')
+                setIsLoginChecked(true)
             }
         } catch (error) {
             console.log('Error retrieving JSON value:', error);
+            setIsLoginChecked(true)
+
         }
     };
 
+    // if (!isLoginchecked) {
+    //     return (<Splash />)
+    // }
+
     return (
+
         <NavigationContainer >
 
 
-            <Stack.Navigator initialRouteName='Main' >
-                <Stack.Screen name='Onboarding' component={OnBoardingScreen}
-                    options={{ headerShown: false }} />
-                <Stack.Screen name='Signup' component={Signup}
+            {isLoginchecked ? (<Stack.Navigator initialRouteName={initalRoute}>
+
+
+  <Stack.Screen name='Signup' component={Signup}
                     options={{ headerShown: false }} />
 
+                <Stack.Screen name='Onboarding' component={OnBoardingScreen}
+                    options={{ headerShown: false }} />
+              
                 <Stack.Screen name='Main' component={Main}
                     options={{ headerShown: false }} />
                 <Stack.Screen name='Login' component={Login}
@@ -69,10 +89,14 @@ const AppNavigator = () => {
                     options={{ headerShown: false }} />
                 <Stack.Screen name='Cart' component={Cart}
                     options={{ headerShown: false }} />
-                     <Stack.Screen name='ChangePassword' component={ChangePassword}
+                <Stack.Screen name='ChangePassword' component={ChangePassword}
+                    options={{ headerShown: false }} />
+                        <Stack.Screen name='ChatList' component={ChatList}
                     options={{ headerShown: false }} />
             </Stack.Navigator>
+            ) : (<Splash />)
 
+            }
 
 
         </NavigationContainer>

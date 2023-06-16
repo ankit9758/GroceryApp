@@ -22,7 +22,7 @@ import { USER_DATA } from "../../utils/AppConstant";
 
 const ChangePassword = () => {
     const [loading, setLoading] = useState(false);
-
+   
     const [currentpassword, setCurrentPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -37,6 +37,9 @@ const ChangePassword = () => {
 
     const navigation = useNavigation()
     const toastRef = React.useRef(null)
+ 
+
+
 
     const checkPasswordAndSaveUserData = () => {
         AsyncStorage.getItem(USER_DATA).then((jsonData) => {
@@ -51,10 +54,10 @@ const ChangePassword = () => {
 
                             const data = querySnapshot.docs[0]._ref._documentPath._parts
                             console.log('values...', querySnapshot.docs[0]._ref._documentPath._parts)
-                            const documentId=data[1]
-                            console.log('id---',documentId)                         
+                            const documentId = data[1]
+                            console.log('id---', documentId)
                             updateUserPassword(documentId)
-                           
+
                         } else {
                             setLoading(false);
                             showErrorToast('Paasword is not correct.')
@@ -116,7 +119,7 @@ const ChangePassword = () => {
         try {
             AsyncStorage.getItem(key).then((data) => {
                 // the string value read from AsyncStorage has been assigned to data
-               // console.log('1', data)
+                // console.log('1', data)
                 // transform it back to an object
                 data = JSON.parse(data);
                 console.log('2', data)
@@ -129,7 +132,7 @@ const ChangePassword = () => {
                 setTimeout(() => {
                     navigation.goBack()
                 }, 1000);
-                 
+
             }
             )
 

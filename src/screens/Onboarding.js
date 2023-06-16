@@ -40,9 +40,10 @@ export default function OnBoardingScreen() {
                     height: height * 0.8,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    paddingTop:25
+                    paddingTop: 25
                 }}>
                 <Animated.FlatList
+
                     ref={ref}
                     data={slides}
                     showsHorizontalScrollIndicator={false}
@@ -55,6 +56,7 @@ export default function OnBoardingScreen() {
                     renderItem={({ item, index }) => {
                         return (
                             <Animated.View
+                               
                                 style={{
                                     width: width,
                                     height: height,

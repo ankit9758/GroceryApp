@@ -13,7 +13,7 @@ import { image_logout, image_password } from '../../../utils/images';
 const Profile = () => {
     const [visible, setVisible] = useState(false)
 
-    const [imaegPath, setImagePath] = useState('')
+    const [imagePath, setImagePath] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhoneNumber] = useState('')
     const [email, setEmail] = useState('')
@@ -60,9 +60,10 @@ const Profile = () => {
                 <View style={stylesProfile.screenContainer}>
                     <View style={stylesProfile.profileContainer}>
                         <Image
-                          source={imaegPath === '' ? require('../../images/no_data.png') : { uri: imaegPath }}
+                          source={imagePath === '' ? require('../../images/no_data.png') : { uri: imagePath }}
                             
-                            style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30, borderColor: 'red', }}
+                            style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30,
+                             borderColor: red, }}
                         />
                         <View style={stylesProfile.profilePhotoContainer}>
                             <TouchableOpacity
@@ -85,7 +86,7 @@ const Profile = () => {
 
                     <View style={{ marginTop: 30, marginBottom: 80 }}>
                         <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { navigation.navigate('SavedAddress')}} />
-                        <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Orders'} onClick={() => { console.log('Hello') }} />
+                        <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Chats'} onClick={() => { navigation.navigate('ChatList')}} />
                         <ProfileItems leftIcon={image_password} title={'Change Password '} onClick={() => { navigation.navigate('ChangePassword') }} />
                         <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { console.log('Hello') }} />
                         <ProfileItems leftIcon={image_logout} title={'Log out'} onClick={() => { setVisible(true) }} />

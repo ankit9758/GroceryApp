@@ -18,7 +18,7 @@ const ProductDetails = () => {
     const route = useRoute()
     const disptach = useDispatch();
     const [productDetail, setProductDetail] = useState({})
-    const [val, setval] = useState()
+    //const [val, setval] = useState()
 
     const ref = useRef()
     useEffect(() => {
@@ -63,11 +63,12 @@ const ProductDetails = () => {
                                 disptach(addItemToWishList(productDetail))
                             }
                             console.log('Product--1', productDetail)
-                            productDetail.isOnWishlist = !productDetail.isOnWishlist
+                           // productDetail.isOnWishlist = !productDetail.isOnWishlist
                             //  productDetail.title="ankit"
                             console.log('Product--2', productDetail)
-                            setProductDetail(productDetail)
-                            setval(productDetail.isOnWishlist)
+                            
+                            setProductDetail({...productDetail,isOnWishlist: !productDetail.isOnWishlist})
+                           // setval(productDetail.isOnWishlist)
                             console.log('Product--3', productDetail)
 
                         }

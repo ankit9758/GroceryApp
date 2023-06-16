@@ -16,6 +16,9 @@ const HomeScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={red} />
+      
+
+   
             <Header
                 leftIcon={require('../images/menu.png')}
                 rightIcon={require('../images/cart.png')}
@@ -70,7 +73,7 @@ const HomeScreen = () => {
                     <Text style={[styles.appTextBold14, { fontFamily: selectedTab == 4 ? 'Raleway-Black' : 'Raleway-Regular' }]}>Profile</Text>
                 </TouchableOpacity>
             </View>
-
+           
 
         </SafeAreaView>
     );
@@ -79,7 +82,8 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: black
+        backgroundColor: black,
+        flexDirection:'column'
 
     },
     bottomView: {

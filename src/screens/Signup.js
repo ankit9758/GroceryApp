@@ -82,7 +82,7 @@ const Signup = () => {
             phoneNumber: phone,
             email: email,
             password: password,
-            imaegPath:imageUri
+            imagePath:imageUri
         }).then((data) => {
             setLoading(false);
             showSucessToast('User Added Sucessfully.')
@@ -292,7 +292,8 @@ const Signup = () => {
                             <Image
 
                                 source={imageUri === '' ? require('../images/no_data.png') : { uri: imageUri }}
-                                style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30, borderColor: 'red', }}
+                                style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30,
+                                 borderColor: red}}
                             />
                             <View style={styleSignUp.profilePhotoContainer}>
                                 <TouchableOpacity

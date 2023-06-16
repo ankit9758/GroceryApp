@@ -8,7 +8,7 @@ const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onclickRightIcon,
   
 const cardData = useSelector(state => state.cartData)
 
-//console.log('cart', cardData)
+console.log('cart------->', cardData.data.length)
   return (
     <View style={styles.header}>
       <TouchableOpacity style={styles.btn} onPress={() => onClickLeftIcon()}>
@@ -29,9 +29,9 @@ const cardData = useSelector(state => state.cartData)
 export default Header;
 const styles = StyleSheet.create({
   header: {
-    width: width,
+    width: '100%',
     height: 56,
-    backgroundColor: red,
+    backgroundColor: 'orange',
     alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 15, flexDirection: 'row'
   },
