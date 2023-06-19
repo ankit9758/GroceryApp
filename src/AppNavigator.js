@@ -16,11 +16,12 @@ import Cart from './screens/Cart';
 import ChangePassword from './screens/ChangePassword';
 import Splash from './screens/Splash';
 import ChatList from './screens/ChatList';
+import BottomNavigaiton from './screens/bottomnavigations/BottomNavigation';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {
     // let  initalRoute='Onboarding'
-    const [initalRoute,setInitalRoute]=useState('')
+    const [initalRoute, setInitalRoute] = useState('')
     //const [initalRoute, setInitalRoute] = useState('Onboarding')
     const [isLoginchecked, setIsLoginChecked] = useState(false)
 
@@ -68,12 +69,12 @@ const AppNavigator = () => {
             {isLoginchecked ? (<Stack.Navigator initialRouteName={initalRoute}>
 
 
-  <Stack.Screen name='Signup' component={Signup}
+                <Stack.Screen name='Signup' component={Signup}
                     options={{ headerShown: false }} />
 
                 <Stack.Screen name='Onboarding' component={OnBoardingScreen}
                     options={{ headerShown: false }} />
-              
+
                 <Stack.Screen name='Main' component={Main}
                     options={{ headerShown: false }} />
                 <Stack.Screen name='Login' component={Login}
@@ -91,7 +92,10 @@ const AppNavigator = () => {
                     options={{ headerShown: false }} />
                 <Stack.Screen name='ChangePassword' component={ChangePassword}
                     options={{ headerShown: false }} />
-                        <Stack.Screen name='ChatList' component={ChatList}
+                <Stack.Screen name='ChatList' component={ChatList}
+                    options={{ headerShown: false }} />
+
+                <Stack.Screen name='BottomNavigation' component={BottomNavigaiton}
                     options={{ headerShown: false }} />
             </Stack.Navigator>
             ) : (<Splash />)

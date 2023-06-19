@@ -88,7 +88,7 @@ const Profile = () => {
                         <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { navigation.navigate('SavedAddress')}} />
                         <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Chats'} onClick={() => { navigation.navigate('ChatList')}} />
                         <ProfileItems leftIcon={image_password} title={'Change Password '} onClick={() => { navigation.navigate('ChangePassword') }} />
-                        <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { console.log('Hello') }} />
+                        <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { navigation.navigate('BottomNavigation') }} />
                         <ProfileItems leftIcon={image_logout} title={'Log out'} onClick={() => { setVisible(true) }} />
                     </View>
 

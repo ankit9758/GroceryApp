@@ -33,7 +33,6 @@ const ChatList = () => {
     };
 
     useEffect(() => {
-      
         getUserList()
     
     }, [])
