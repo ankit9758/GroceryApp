@@ -63,7 +63,7 @@ const Login = () => {
                 if (querySnapshot.docs.length > 0) {
                     if (querySnapshot.docs[0]._data.email == email &&
                         querySnapshot.docs[0]._data.password == password) {
-                        showSucessToast('User login sucessfully')
+                    //    showSucessToast('User login sucessfully')
                        console.log('dataa---',JSON.stringify(querySnapshot.docs[0]._data))
                        saveJSONToAsyncStorage(USER_DATA,querySnapshot.docs[0]._data)
                     } else {
@@ -124,11 +124,11 @@ const Login = () => {
     }
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaView >
-                <Toast ref={toastRef} />
+        // <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView style={{flex:1,flexDirection:'column'}}  >
+                {/* <Toast ref={toastRef} /> */}
 
-                <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} />
+                {/* <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} /> */}
                 {loading && <OverlayActivityIndicator />}
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{ paddingHorizontal: 20 }}>
@@ -235,7 +235,7 @@ const Login = () => {
                     }}
                 />
             </SafeAreaView>
-        </GestureHandlerRootView>
+        // </GestureHandlerRootView>
 
     );
 }
