@@ -14,7 +14,10 @@ const Main = () => {
         <Drawer.Navigator
             drawerContent={props => <CustomDrawer {...props} />}
             screenOptions={{
-                headerShown: false
+                headerShown: false,
+                drawerType:'slide'
+
+
             }}
             
             >

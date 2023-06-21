@@ -19,54 +19,11 @@ import ChatList from './screens/ChatList';
 import BottomNavigaiton from './screens/bottomnavigations/BottomNavigation';
 
 const Stack = createNativeStackNavigator()
-const AppNavigator = () => {
-    // let  initalRoute='Onboarding'
-    const [initalRoute, setInitalRoute] = useState('')
-    //const [initalRoute, setInitalRoute] = useState('Onboarding')
-    const [isLoginchecked, setIsLoginChecked] = useState(false)
-
-    useEffect(() => {
-        getJSONFromAsyncStorage(USER_DATA)
-    }, [isLoginchecked])
-
-    const getJSONFromAsyncStorage = async (key) => {
-        try {
-            const jsonData = await AsyncStorage.getItem(key);
-            if (jsonData !== null) {
-                console.log('Retrieved  Nav:', jsonData);
-                const data = JSON.parse(jsonData);
-                console.log('Retrieved JSON value App Nav:', data);
-
-                // initalRoute='Main'
-                setInitalRoute('Main')
-
-                if (data['email'] !== '') {
-                    console.log('Retrieved JSON value Nav:', { initalRoute });
-
-                }
-                setIsLoginChecked(true)
-                return data;
-            } else {
-                setInitalRoute('Onboarding')
-                setIsLoginChecked(true)
-            }
-        } catch (error) {
-            console.log('Error retrieving JSON value:', error);
-            setIsLoginChecked(true)
-
-        }
-    };
-
-    // if (!isLoginchecked) {
-    //     return (<Splash />)
-    // }
+const AppNavigator = (props) => {
 
     return (
-
         <NavigationContainer >
-
-
-            {isLoginchecked ? (<Stack.Navigator initialRouteName={initalRoute}>
+            <Stack.Navigator initialRouteName={props.initalRoute}>
 
 
                 <Stack.Screen name='Signup' component={Signup}
@@ -98,9 +55,9 @@ const AppNavigator = () => {
                 <Stack.Screen name='BottomNavigation' component={BottomNavigaiton}
                     options={{ headerShown: false }} />
             </Stack.Navigator>
-            ) : (<Splash />)
 
-            }
+
+
 
 
         </NavigationContainer>

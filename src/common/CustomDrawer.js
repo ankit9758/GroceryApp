@@ -85,7 +85,9 @@ export default CustomDrawer = ({ state, navigation }) => {
           icon={({ color, size }) => <Image source={image_navigation} style={{ height: 24, width: 24,tintColor:getCurrentRouteName() === 'BottomNavigation'?white:black }}  />}
          
           onPress={() => {
-            console.log('Helllo')
+
+            navigateToScreen('BottomNavigation')
+        
           }}
           focused={getCurrentRouteName() === 'BottomNavigation'} // Check if the current route name is 'Settings'
           labelStyle={getCurrentRouteName() === 'BottomNavigation' ? styles.selectedLabel : styles.unselectedLabel} // Apply different styles based on focus
