@@ -1,52 +1,54 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import {BASE_URL} from './AppConstant'
+import { BASE_PAG_URL, BASE_URL } from './AppConstant'
 
 export const callApi = (
   methodType: AxiosRequestConfig['method'],
   url: string,
   params?: any,
 ) => {
-  console.log('group chatss url is',BASE_URL+url)
-  console.log('param iss======>',params);
- 
+  console.log('group chatss url is', BASE_URL + url)
+  console.log('param iss======>', params);
+
   return axios({
     method: methodType,
     url: BASE_URL + url,
     data: params,
-    
+
   })
-  
+
     .then(function (response) {
-      console.log('response cgdf-->',response.request)
+      console.log('response cgdf-->', response.request)
       return Promise.resolve(response);
     })
     .catch(function (response) {
-      console.log('response cgr-->',response)
+      console.log('response cgr-->', response)
 
       return Promise.reject(response);
     });
 };
+
+
 export const callApiWithoutParams = (
   methodType: AxiosRequestConfig['method'],
   url: string,
-  
-) => {
-  console.log('group chatss url is',BASE_URL+url)
 
- 
+) => {
+  console.log('group chatss url is', BASE_URL + url)
+
+
   return axios({
     method: methodType,
     url: BASE_URL + url,
-   
-    
+
+
   })
-  
+
     .then(function (response) {
-      console.log('response cgdf-->',response.request)
+      console.log('response cgdf-->', response.request)
       return Promise.resolve(response);
     })
     .catch(function (response) {
-      console.log('response cgr-->',response)
+      console.log('response cgr-->', response)
 
       return Promise.reject(response);
     });
@@ -69,3 +71,25 @@ export const callApiUser = (
       return Promise.reject(response);
     });
 };
+
+
+export const callPaginationApiWithoutParams = (
+  methodType: AxiosRequestConfig['method'],
+  url: string,
+) => {
+  console.log('pagination url is', BASE_PAG_URL + url)
+  
+  return axios({
+    method: methodType,
+    url: BASE_PAG_URL + url,
+  }) .then(function (response) {
+     // console.log('response cgdf-->', response.request)
+      return Promise.resolve(response);
+    })
+    .catch(function (response) {
+      console.log('response cgr-->', response)
+
+      return Promise.reject(response);
+    });
+};
+

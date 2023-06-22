@@ -21,7 +21,8 @@ const App = () => {
                     const data = JSON.parse(jsonData);
                     console.log('Retrieved JSON value App Nav:', data);
 
-                    setInitalRoute('Main')
+                    //setInitalRoute('Main')
+                    setInitalRoute('OtpVerification')
                     setIsLoginChecked(true)
                     if (data['email'] !== '') {
                         console.log('Retrieved JSON value Nav:', { initalRoute });

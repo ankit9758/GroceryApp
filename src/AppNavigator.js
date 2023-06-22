@@ -14,9 +14,9 @@ import AddAddress from './screens/AddAddress';
 import ProductDetails from './screens/ProductDetails';
 import Cart from './screens/Cart';
 import ChangePassword from './screens/ChangePassword';
-import Splash from './screens/Splash';
 import ChatList from './screens/ChatList';
 import BottomNavigaiton from './screens/bottomnavigations/BottomNavigation';
+import OtpVerification from './screens/OtpVerification';
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = (props) => {
@@ -25,6 +25,9 @@ const AppNavigator = (props) => {
         <NavigationContainer >
             <Stack.Navigator initialRouteName={props.initalRoute}>
 
+
+                <Stack.Screen name='OtpVerification' component={OtpVerification}
+                    options={{ headerShown: false }} />
 
                 <Stack.Screen name='Signup' component={Signup}
                     options={{ headerShown: false }} />

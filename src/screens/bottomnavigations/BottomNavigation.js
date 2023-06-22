@@ -13,6 +13,7 @@ import { image_add, image_home, image_wishlist } from "../../../utils/images";
 import { black } from "../../../utils/color";
 import Header from "../../common/Header";
 import Add from "../tabs/Add";
+import PaginationDemo from "./tabs/PaginationDemo";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,12 +30,12 @@ const BottomNavigaiton = () => {
     return (<Tab.Navigator
         screenOptions={{
             tabBarShowLabel: false, tabBarStyle: {
-              position: 'absolute',
-                bottom: 20,
-                left: 10,
-                right: 10,
+            //   position: 'absolute',
+            //     bottom: 20,
+                // left: 10,
+                // right: 10,
                 elevation: 0,
-                borderRadius: 10,
+                //borderRadius: 10,
                 height: 70,
                 backgroundColor: red,
 
@@ -49,7 +50,7 @@ const BottomNavigaiton = () => {
         }} />
 
 
-        <Tab.Screen name="Add Post" component={Add} options={{
+        <Tab.Screen name="Pagination" component={PaginationDemo} options={{
             tabBarIcon:
             ({ focused }) =>(  
             <View style={{ width: 60, height: 60, borderRadius: 60 / 2,
