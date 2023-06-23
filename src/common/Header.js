@@ -8,7 +8,7 @@ const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onclickRightIcon,
   
 const cardData = useSelector(state => state.cartData)
 
-console.log('cart------->', cardData.data.length)
+//console.log('cart------->', cardData.data.length)
   return (
     <View style={styles.header}>
       <TouchableOpacity style={styles.btn} onPress={() => onClickLeftIcon()}>
