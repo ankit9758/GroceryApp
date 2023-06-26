@@ -14,17 +14,24 @@ import AddAddress from './screens/AddAddress';
 import ProductDetails from './screens/ProductDetails';
 import Cart from './screens/Cart';
 import ChangePassword from './screens/ChangePassword';
-import ChatList from './screens/ChatList';
+import ChatList from './screens/topNavigation/ChatList';
 import BottomNavigaiton from './screens/bottomnavigations/BottomNavigation';
 import OtpVerification from './screens/OtpVerification';
+import TabTop from './screens/topNavigation/PagerTabs'
+
 
 const Stack = createNativeStackNavigator()
 const AppNavigator = (props) => {
 
     return (
         <NavigationContainer >
-            <Stack.Navigator initialRouteName={props.initalRoute}>
+            <Stack.Navigator initialRouteName={"TabTop"}>
 
+
+                <Stack.Screen name='TabTop' component={TabTop}
+                    options={{ headerShown: false }} />
+
+            
 
                 <Stack.Screen name='OtpVerification' component={OtpVerification}
                     options={{ headerShown: false }} />

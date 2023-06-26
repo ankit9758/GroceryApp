@@ -5,16 +5,16 @@ import {
     SafeAreaView, StatusBar, Image, StyleSheet, ActivityIndicator, RefreshControl, Keyboard
 } from "react-native"
 import React, { useState, useRef, useEffect } from "react";
-import Header from "../common/Header";
-import { black, green, red, white } from "../../utils/color";
-import { image_back, image_no_data } from "../../utils/images";
+import Header from "../../common/Header";
+import { black, green, red, white } from "../../../utils/color";
+import { image_back, image_no_data } from "../../../utils/images";
 import { useSelector } from "react-redux";
-import NoDataFound from '../common/NoDatafound';
+import NoDataFound from '../../common/NoDatafound';
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore';
-import OverlayActivityIndicator from "../common/Loader";
+import OverlayActivityIndicator from "../../common/Loader";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { USER_DATA } from "../../utils/AppConstant";
+import { USER_DATA } from "../../../utils/AppConstant";
 
 const ChatList = () => {
 
@@ -71,14 +71,15 @@ const ChatList = () => {
     return (<SafeAreaView style={styles.container}>
 
         <StatusBar backgroundColor={red} />
-        <Header
+        {/* <Header
             leftIcon={image_back}
             title={'All Conversation'}
             onClickLeftIcon={
                 () => navigation.goBack()
-            } isCartScreen={false} />
+            } isCartScreen={false} /> */}
         <View style={{
             flex: 1, 
+
             //marginHorizontal: 10,
 
         }}>
@@ -150,7 +151,9 @@ export default ChatList
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: white
+       
+        alignItems: 'center' ,
+        paddingVertical:20
     },
     appButtonContainer: {
         backgroundColor: red,
