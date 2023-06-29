@@ -6,16 +6,19 @@ import {
 import { red, white, black, green, darkRed, blue, grey, darkGray } from "../../utils/color";
 import AppTextInput from "../common/AppTextInput";
 import AppButton from "../common/AppButton";
-import { useNavigation } from '@react-navigation/native'
 import OverlayActivityIndicator from "../common/Loader";
 import { isValidEmail, validateEmpty, validatePassword, validateName, validateNumber, returnFilterValue } from '../common/Validaton'
-import Toast from "../../utils/Toast";
+
+import Toast from "react-native-toast-message";
+import customToaast, { toastConfig } from "../../utils/ToastConfig";
+import { ERROR, SUCESS } from "../../utils/AppConstant";
+
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Modal from "react-native-modal";
 import ImagePicker from 'react-native-image-crop-picker';
 import { request, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
 import firestore from '@react-native-firebase/firestore';
-
+import { useNavigation, useRoute } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER_DATA } from "../../utils/AppConstant";
 import storage from '@react-native-firebase/storage';
@@ -35,7 +38,7 @@ const Signup = () => {
     const [phone, setPhoneNumber] = useState('')
     const [email, setEmail] = useState('')
 
-    const [loading, setLoading] = useState(false);
+
     const [showCameraGallery, setShowCameraGallery] = useState(false);
 
 
@@ -60,7 +63,7 @@ const Signup = () => {
     const close = () => setVisible(false);
     const open = () => setVisible(true)
 
-    const toastRef = React.useRef(null)
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         GoogleSignin.configure({
@@ -94,83 +97,54 @@ const Signup = () => {
         }
     };
 
+   const signOut = async () => {
+        try {
+          await GoogleSignin.signOut();
+           // Remember to remove the user from your app's state as well
+        } catch (error) {
+          console.error(error);
+        }
+      };
     const checkEmailAndSaveUserData = () => {
         setLoading(true);
         firestore().collection('Users').where
             ('email', '==', email).get().then((querySnapshot) => {
                 console.log(querySnapshot.docs)
+                setLoading(false);
                 if (querySnapshot.docs.length > 0) {
-                    setLoading(false);
-                    showErrorToast('Email is already exist.')
+                   customToaast(ERROR, 'Email is already exist.')
+
                 } else {
-                    saveUserData()
+                    signOut() //signout google account
+                    const jsonData = {
+                        'firstName': `${firstName}`,
+                        'lastName': `${lastName}`,
+                        'phoneNumber': `${phone}`,
+                        'email': `${email}`,
+                        'imagePath': `${imageUri}`,
+                        'password': `${password}`,
+                        'socialId': `${socialId}`
+                    }
+                    console.log('Hello-->',jsonData)
+                  
+                    navigation.navigate('OtpVerification', { types: 'edit',data: jsonData })
+
                 }
             }).catch((error) => {
                 setLoading(false);
                 console.log(error)
-                showErrorToast(error)
+                customToaast(ERROR, error)
+                toastRef.current.show({
+                    type: 'warning',
+                    text: 'Camera permission denied',
+                    duration: 2000
+                });
             })
     }
 
-    const saveUserData = () => {
-        firestore().collection('Users').add({
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phone,
-            email: email,
-            password: password,
-            imagePath: imageUri
-        }).then((data) => {
-            setLoading(false);
-            showSucessToast('User Added Sucessfully.')
-            console.log(data);
-            saveJSONToAsyncStorage(USER_DATA,
-                {
-                    'firstName': `${firstName}`,
-                    'lastName': `${lastName}`,
-                    'phoneNumber': `${phone}`,
-                    'email': `${email}`,
-                    'imagePath': `${imageUri}`,
-                    'password': `${password}`,
-                })
 
 
-        }).catch((error) => {
-            setLoading(false);
-            showErrorToast(error)
-            console.log(error)
 
-        })
-    }
-    const saveJSONToAsyncStorage = async (key, data) => {
-        try {
-            const jsonData = JSON.stringify(data);
-            await AsyncStorage.setItem(key, jsonData);
-            console.log('JSON value saved successfully.');
-            //   setTimeout(() => {
-            navigation.navigate('Main')
-            // }, 3000);
-
-        } catch (error) {
-            console.log('Error saving JSON value:', error);
-        }
-    };
-
-
-    const showErrorToast = (msg) => {
-        toastRef.current.show({
-            type: 'error',
-            text: msg,
-            duration: 2000
-        });
-    }
-    const showSucessToast = (msg) => {
-        toastRef.current.show({
-            type: 'success',
-            text: msg,
-            duration: 2000
-        });
-    }
     const displayLoader = () => {
         setLoading(true);
         setTimeout(() => {
@@ -224,7 +198,8 @@ const Signup = () => {
             getImagePath(fileName)
         }).catch((error) => {
             setLoading(false)
-            showErrorToast(error)
+
+            customToaast(ERROR, error)
         });
     };
     const getImagePath = async (fileName) => {
@@ -234,7 +209,8 @@ const Signup = () => {
             // console.log(data)
         }).catch((error) => {
             setLoading(false)
-            showErrorToast(error)
+            customToaast(ERROR, error)
+
         });
     };
 
@@ -261,11 +237,8 @@ const Signup = () => {
                 } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
                     handlePermissionDenied();
                 } else {
-                    toastRef.current.show({
-                        type: 'warning',
-                        text: 'Camera permission denied',
-                        duration: 2000
-                    });
+                    customToaast(ERROR, 'Camera permission denied')
+
 
                     console.log('Camera permission denied');
                 }
@@ -278,11 +251,8 @@ const Signup = () => {
                     handlePermissionDenied();
                 }
                 else {
-                    toastRef.current.show({
-                        type: 'warning',
-                        text: 'Camera permission denied',
-                        duration: 2000
-                    });
+                    customToaast(ERROR, 'Camera permission denied')
+
                     console.log('Camera permission denied');
                 }
             }
@@ -301,11 +271,7 @@ const Signup = () => {
         );
     };
     const openCancel = () => {
-        toastRef.current.show({
-            type: 'warning',
-            text: 'Camera permission denied',
-            duration: 2000
-        });
+        customToaast(ERROR, 'Camera permission denied')
     };
     const openAppSettings = () => {
         if (Platform.OS === 'android') {
@@ -320,7 +286,6 @@ const Signup = () => {
     return (
         <GestureHandlerRootView style={{ flex: 1, backgroundColor: white }}>
             <SafeAreaView >
-                <Toast ref={toastRef} />
                 <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} />
                 {loading && <OverlayActivityIndicator />}
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -550,6 +515,8 @@ const Signup = () => {
 
 
                 </Modal>
+
+                <Toast config={toastConfig} />
             </SafeAreaView>
         </GestureHandlerRootView>
 

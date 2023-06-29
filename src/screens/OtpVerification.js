@@ -2,14 +2,19 @@ import {
     TouchableOpacity, Text, View, StyleSheet, FlatList, ActivityIndicator, Button, SafeAreaView, StatusBar, TextInput, Keyboard
 } from "react-native"
 import React, { useState, useRef, useEffect } from "react";
-import { black, green, grey, red, white } from "../../utils/color"
+import { black, blue, green, grey, red, white } from "../../utils/color"
 import Header from "../common/Header"
 import { image_back } from "../../utils/images"
+import firestore from '@react-native-firebase/firestore';
 
-import AppTextInput from "../common/AppTextInput";
-import AppButton from "../common/AppButton";
+import { useNavigation, useRoute } from '@react-navigation/native'
+import Toast from "react-native-toast-message";
+import customToaast, { toastConfig } from "../../utils/ToastConfig";
+import { ERROR, NORMAL, SOCIAL, SUCESS, USER_DATA } from "../../utils/AppConstant";
+import OverlayActivityIndicator from "../common/Loader";
+import uuid from 'react-native-uuid';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useNavigation } from '@react-navigation/native'
 
 
 const OtpVerification = () => {
@@ -24,11 +29,22 @@ const OtpVerification = () => {
     const [thirdNumber, setThirdNumber] = useState('')
     const [fouthNumber, setFouthNumber] = useState('')
 
-    const [timerCount, setTimerCount] = useState(30)
+    const [genrateOtp, setGenerateOtp] = useState('')
+    const [isGenrateOtp, setIsGenerateOtp] = useState(0)
+
+    const [timerCount, setTimerCount] = useState(5)
+    const [loading, setLoading] = useState(false);
 
     const [isInputFocusedPosition, setIsInputFocusedPostion] = useState(0);
+    const [userData, setUserData] = useState({})
+    const route = useRoute()
+    useEffect(() => {
+        setUserData(route.params.data)
+        generateRandomNumber()
+    }, [isGenrateOtp])
 
     useEffect(() => {
+
         const interval = setInterval(() => {
             if (timerCount == 0) {
                 clearInterval(interval)
@@ -41,6 +57,109 @@ const OtpVerification = () => {
         }
     }, [timerCount]);
 
+    const checkEmailAndSaveUserData = () => {
+        setLoading(true);
+        firestore().collection('Users').where
+            ('email', '==', email).get().then((querySnapshot) => {
+                console.log(querySnapshot.docs)
+                if (querySnapshot.docs.length > 0) {
+                    setLoading(false);
+                    customToaast(ERROR, 'Email is already exist.')
+
+                } else {
+                    saveUserData()
+                }
+            }).catch((error) => {
+                setLoading(false);
+                console.log(error)
+                customToaast(ERROR, error)
+
+            })
+    }
+
+
+    const saveUserData = () => {
+        setLoading(true);
+        const accountType = userData.socialId != '' ? SOCIAL : NORMAL
+
+        console.log(userData);
+
+        const abc = {
+            'firstName': userData.firstName,
+            'lastName': userData.lastName,
+            'phoneNumber': userData.phoneNumber,
+            'email': userData.email,
+            'password': userData.password,
+            'imagePath': userData.imagePath,
+            'socialId': userData.socialId,
+            'accountType': accountType,
+            'userId': uuid.v4()
+        }
+        console.log('specialData ', abc);
+        firestore().collection('Users').add(
+            abc
+        ).then((data) => {
+            setLoading(false);
+            customToaast(SUCESS, 'Account created Sucessfully.')
+
+           // console.log(data);
+            saveJSONToAsyncStorage(USER_DATA,
+                // {
+                //     'firstName': userData.firstName,
+                //     'lastName': userData.lastName,
+                //     'phoneNumber': userData.phoneNumber,
+                //     'email': userData.email,
+                //     'imagePath': userData.imagePath,
+                //     'password': userData.password,
+                //     'socialId': userData.socialId,
+                //     'accountType': accountType
+                // }
+                abc
+                )
+
+
+        }).catch((error) => {
+            setLoading(false);
+            customToaast(ERROR, error)
+
+            console.log(error)
+
+        })
+    }
+    const saveJSONToAsyncStorage = async (key, data) => {
+        try {
+            const jsonData = JSON.stringify(data);
+            await AsyncStorage.setItem(key, jsonData);
+            console.log('JSON value saved successfully.');
+            //   setTimeout(() => {
+            navigation.navigate('Main')
+            // }, 3000);
+
+        } catch (error) {
+            console.log('Error saving JSON value:', error);
+        }
+    };
+
+    const generateRandomNumber = () => {
+        const min = 1000;
+        const max = 9999;
+        const randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
+        console.log('Otpp--->', randomNumber)
+        setGenerateOtp(randomNumber);
+        customToaast(SUCESS, `Otp ${randomNumber} sent suceesully.`)
+    };
+
+    const checkAndVerifyOtp = () => {
+        const enterdOTP = firstNumber + secondNumber + thirdNumber + fouthNumber
+        console.log('entered Otp', enterdOTP)
+        if (genrateOtp == enterdOTP) {
+            saveUserData()
+            // customToaast(SUCESS, `Otp verified suceesully.`)
+        } else {
+            customToaast(ERROR, `Please enter correct code.`)
+        }
+        //  
+    };
 
     const handleKeyPress = ({ nativeEvent: { key: keyValue } }) => {
         if (!isNaN(keyValue)) {
@@ -64,7 +183,7 @@ const OtpVerification = () => {
     };
     return (<SafeAreaView style={{ flex: 1, backgroundColor: white, flexDirection: 'column' }}>
         <StatusBar translucent={false} backgroundColor={red} />
-
+        {loading && <OverlayActivityIndicator />}
         <Header
             leftIcon={image_back}
             title={'Otp Veriifcation'}
@@ -77,15 +196,16 @@ const OtpVerification = () => {
             marginVertical: 100,
             paddingHorizontal: 45
         }}>
+
             <Text style={{
 
                 fontSize: 16,
-                color: black,
-                textAlign: 'center',
-                fontFamily: 'Raleway-Regular',
+                color: black, fontFamily: 'Raleway-Regular',
             }}>
-                Please check your email to see the verification code.
+                Please check your phone,a verification code is sent to
+                <Text style={{ fontSize: 24, color: red, fontFamily: 'Raleway-Black' }}>  {userData.phoneNumber}</Text>
             </Text>
+
 
             <Text style={{
                 marginTop: 40,
@@ -165,7 +285,7 @@ const OtpVerification = () => {
             </View>
             <TouchableOpacity
                 disabled={firstNumber != "" && secondNumber != "" && thirdNumber != "" && fouthNumber != "" ? false : true}
-                onPress={() => { console.log('Hello') }}>
+                onPress={() => { checkAndVerifyOtp() }}>
                 <View style={[styles.appButtonContainer,
                 { backgroundColor: firstNumber != "" && secondNumber != "" && thirdNumber != "" && fouthNumber != "" ? red : grey }]} >
                     <Text style={[styles.appButtonText]}>Verify</Text>
@@ -175,7 +295,8 @@ const OtpVerification = () => {
                 <TouchableOpacity disabled={timerCount == 0 ? false : true}
                     onPress={() => {
                         Keyboard.dismiss()
-                        setTimerCount(30)
+                        setIsGenerateOtp(isGenrateOtp + 1)
+                        setTimerCount(5)
                     }
                     }>
                     <Text
@@ -206,7 +327,7 @@ const OtpVerification = () => {
 
 
         </View>
-
+        <Toast config={toastConfig} />
     </SafeAreaView>
     )
 }

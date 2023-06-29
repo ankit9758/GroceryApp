@@ -7,4 +7,7 @@ export const BASE_PAG_URL='https://api.instantwebtools.net/'
 export const PASSENGER_DATA='v1/passenger'
 export const LOGIN_TYPE='login_type'
 export const SOCIAL='social'
-export const NORMAL='nprmal'
+export const NORMAL='normal'
+export const SUCESS='sucess'
+export const ERROR='error'
+
