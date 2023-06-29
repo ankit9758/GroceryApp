@@ -25,7 +25,7 @@ const AppNavigator = (props) => {
 
     return (
         <NavigationContainer >
-            <Stack.Navigator initialRouteName={"TabTop"}>
+            <Stack.Navigator initialRouteName={props.initalRoute}>
 
 
                 <Stack.Screen name='TabTop' component={TabTop}

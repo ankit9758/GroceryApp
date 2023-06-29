@@ -10,7 +10,9 @@ import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-goo
 const Community = () => {
     const [userData, setUserData] = useState(null)
     useEffect(() => {
-        GoogleSignin.configure({ webClientId: '300110096690-t6kf0n4efbsr5t2m4tetqpp8l5fa2n6q.apps.googleusercontent.com' });
+        GoogleSignin.configure({ 
+            webClientId: ''
+         });
     })
 
     // Somewhere in your code
@@ -18,7 +20,7 @@ const Community = () => {
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log('google data ', userInfo.user)
+            console.log('google data ', userInfo)
             setUserData({ userInfo });
         } catch (error) {
             console.log('google data error', error)

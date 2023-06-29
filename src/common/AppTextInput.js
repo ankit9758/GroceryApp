@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, View, Image, TextInput } from "react-native"
 import stylesApp from '../../utils/styles';
-import { white } from "../../utils/color";
+import { black, white } from "../../utils/color";
 
 export default AppTextInput = ({ value, onChangeText, 
   placeholder, type, icon,isLast,onSubmit,reference,isPhone,maxLength}) => (
@@ -19,13 +19,15 @@ export default AppTextInput = ({ value, onChangeText,
   }}>
     <Image source={icon} style={{ height: 24, width: 24 }} />
     <TextInput placeholder={placeholder} placeholderTextColor={'#000000'} style={{
-      marginHorizontal: 10 }} value={value} returnKeyType={isLast ? "done" : "next"}
+      marginHorizontal: 10,color:black }} value={value} returnKeyType={isLast ? "done" : "next"}
       secureTextEntry={type == 'password' ? true : false}
       numberOfLines={1} onChangeText={onChangeText}
        keyboardType={type ? type : 'default'} 
        maxLength={maxLength}
       blurOnSubmit={false} onSubmitEditing={onSubmit}
       ref={reference}
+      
       />
+      
   </View>
 );

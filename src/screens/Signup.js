@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     TouchableOpacity, Text, View,
     ScrollView, SafeAreaView, StatusBar, Image, StyleSheet, Alert, Keyboard, Platform, PermissionsAndroid,
 } from "react-native"
-import { red, white, black, green } from "../../utils/color";
+import { red, white, black, green, darkRed, blue, grey, darkGray } from "../../utils/color";
 import AppTextInput from "../common/AppTextInput";
 import AppButton from "../common/AppButton";
 import { useNavigation } from '@react-navigation/native'
 import OverlayActivityIndicator from "../common/Loader";
-import { isValidEmail, validateEmpty, validatePassword, validateName, validateNumber } from '../common/Validaton'
+import { isValidEmail, validateEmpty, validatePassword, validateName, validateNumber, returnFilterValue } from '../common/Validaton'
 import Toast from "../../utils/Toast";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Modal from "react-native-modal";
@@ -19,6 +19,10 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER_DATA } from "../../utils/AppConstant";
 import storage from '@react-native-firebase/storage';
+import SocialButton from "../common/SocialButton";
+import { image_facebook, image_google } from "../../utils/images";
+import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+
 
 
 
@@ -51,11 +55,44 @@ const Signup = () => {
     const [lastNameError, setLastNameError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [imageUri, setImageUri] = useState('')
+    const [socialId, setSocialId] = useState('')
 
     const close = () => setVisible(false);
     const open = () => setVisible(true)
 
     const toastRef = React.useRef(null)
+
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId: ''
+        });
+    })
+
+    // Somewhere in your code
+    const signIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log('google data ', userInfo)
+            setFirstName(returnFilterValue(userInfo.user.givenName))
+            setLastName(returnFilterValue(userInfo.user.familyName))
+            setEmail(returnFilterValue(userInfo.user.email))
+            setImageUri(returnFilterValue(userInfo.user.photo))
+            setSocialId(returnFilterValue(userInfo.user.id))
+
+        } catch (error) {
+            console.log('google data error', error)
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+            } else {
+                // some other error happened
+            }
+        }
+    };
 
     const checkEmailAndSaveUserData = () => {
         setLoading(true);
@@ -82,22 +119,22 @@ const Signup = () => {
             phoneNumber: phone,
             email: email,
             password: password,
-            imagePath:imageUri
+            imagePath: imageUri
         }).then((data) => {
             setLoading(false);
             showSucessToast('User Added Sucessfully.')
             console.log(data);
             saveJSONToAsyncStorage(USER_DATA,
                 {
-                'firstName': `${firstName}`,
-                'lastName': `${lastName}`,
-                'phoneNumber': `${phone}`,
-                'email': `${email}`,
-                'imagePath': `${imageUri}`,
-                'password': `${password}`,
-              })
-           
-        
+                    'firstName': `${firstName}`,
+                    'lastName': `${lastName}`,
+                    'phoneNumber': `${phone}`,
+                    'email': `${email}`,
+                    'imagePath': `${imageUri}`,
+                    'password': `${password}`,
+                })
+
+
         }).catch((error) => {
             setLoading(false);
             showErrorToast(error)
@@ -169,33 +206,33 @@ const Signup = () => {
             cropping: true,
             cropperCircleOverlay: true
         }).then(image => {
-                setShowCameraGallery(false)
-                // setImageUri(image.path);
-                console.log(image)
-                uploadImage(image.path)
-            })
+            setShowCameraGallery(false)
+            // setImageUri(image.path);
+            console.log(image)
+            uploadImage(image.path)
+        })
             .finally(close);
     };
 
     const uploadImage = async (imagePath) => {
         setLoading(true)
-        const fileName=imagePath.substring(imagePath.lastIndexOf('/') + 1)
+        const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1)
         const reference = storage().ref(fileName)
         const pathToFile = imagePath
         //upload file 
-        await reference.putFile(pathToFile).then(()=>{
+        await reference.putFile(pathToFile).then(() => {
             getImagePath(fileName)
-        }).catch((error)=>{
+        }).catch((error) => {
             setLoading(false)
             showErrorToast(error)
         });
     };
     const getImagePath = async (fileName) => {
-        const url = await storage().ref(fileName).getDownloadURL().then((data)=>{
+        const url = await storage().ref(fileName).getDownloadURL().then((data) => {
             setLoading(false)
             setImageUri(data)
             // console.log(data)
-        }).catch((error)=>{
+        }).catch((error) => {
             setLoading(false)
             showErrorToast(error)
         });
@@ -281,7 +318,7 @@ const Signup = () => {
     };
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1, backgroundColor: white }}>
             <SafeAreaView >
                 <Toast ref={toastRef} />
                 <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} />
@@ -292,8 +329,10 @@ const Signup = () => {
                             <Image
 
                                 source={imageUri === '' ? require('../images/no_data.png') : { uri: imageUri }}
-                                style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30,
-                                 borderColor: red}}
+                                style={{
+                                    width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30,
+                                    borderColor: red
+                                }}
                             />
                             <View style={styleSignUp.profilePhotoContainer}>
                                 <TouchableOpacity
@@ -364,7 +403,7 @@ const Signup = () => {
                         {<Text style={[styleSignUp.errorText12]}>{confirmPasswordError}</Text>}
 
 
-                        <View style={{ marginVertical: 20 }} />
+                        <View style={{ marginVertical: 0 }} />
 
 
                         <AppButton title={'Create Account'} onPress={() => {
@@ -436,8 +475,17 @@ const Signup = () => {
 
                         }} />
 
+                        <Text style={{
+                            textAlign: 'center', marginVertical: 10,
+                            fontSize: 14, color: '#383838', fontFamily: 'Raleway-Regular'
+                        }}>----or Register with---- </Text>
+                        <SocialButton onPress={() => { signIn() }} textColor={darkRed}
+                            title={'LOGIN WITH GOOGLE'} icon={image_google} />
+                        <SocialButton onPress={() => { }} textColor={blue}
+                            title={'LOGIN WITH FACEBOOK'} icon={image_facebook} />
+
                         <View style={{
-                            marginTop: 10, marginBottom: 20, flexDirection: 'row',
+                            marginTop: 20, marginBottom: 40, flexDirection: 'row',
                             alignItems: 'center', alignContent: 'center', justifyContent: 'center'
                         }}>
                             <Text style={styleSignUp.alreadyText}>

@@ -13,6 +13,8 @@ function MyTabs() {
         <Tab.Navigator
             initialRouteName='ChatList'
             screenOptions={{
+                
+                tabBarScrollEnabled:true,
                 tabBarActiveTintColor: white,
                 tabBarInactiveTintColor: black,
                 tabBarAllowFontScaling: true,
@@ -58,12 +60,12 @@ function MyTabs() {
 
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{
-                            fontFamily: focused ? 'Raleway-Regular' : 'Raleway-Regular'
+                            fontFamily: focused ? 'Raleway-Black' : 'Raleway-Regular'
                             , fontSize: 14, color: focused ? white : black
                         }}>Chats</Text>
 
                         <Text style={{
-                            fontFamily: focused ? 'Raleway-Regular' : 'Raleway-Regular'
+                            fontFamily: focused ? 'Raleway-Black' : 'Raleway-Regular'
                             , fontSize: 10, color: focused ? red : black,
                             backgroundColor:focused?'white':grey,
                             width: 20, 
@@ -86,7 +88,7 @@ function MyTabs() {
                     tabBarLabel: ({ focused }) => (
                         <View>
                             <Text style={{
-                                fontFamily: focused ? 'Raleway-Regular' : 'Raleway-Regular'
+                                fontFamily: focused ? 'Raleway-Black' : 'Raleway-Regular'
                                 , fontSize: 14, color: focused ? white : black
                             }}>Calls</Text>
                         </View>
@@ -98,7 +100,7 @@ function MyTabs() {
             <Tab.Screen name="Status" component={Status} options={{
                 tabBarLabel: ({ focused }) => (
                     <Text style={{
-                        fontFamily: focused ? 'Raleway-Regular' : 'Raleway-Regular'
+                        fontFamily: focused ? 'Raleway-Bold' : 'Raleway-Regular'
                         , fontSize: 14, color: focused ? white : black
                     }}>Status</Text>
                 ),

@@ -12,7 +12,7 @@ const stylesApp = StyleSheet.create({
     color: white,
     alignSelf: "center",
     textTransform: "none",
-    fontFamily: 'Raleway-ExtraBold'
+    fontFamily: 'Raleway-Bold'
   },
   appTextBold64: {
     fontSize: 64,
@@ -46,7 +46,7 @@ const stylesApp = StyleSheet.create({
   appButtonContainer: {
     backgroundColor:red,
     elevation: 8,
-    borderRadius: 30,
+    borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 12,
     marginVertical: 10,
