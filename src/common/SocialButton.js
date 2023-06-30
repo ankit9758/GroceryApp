@@ -3,11 +3,11 @@ import { TouchableOpacity, Text, View, StyleSheet, Image } from "react-native"
 import stylesApp from '../../utils/styles';
 import { darkGray, darkRed, green, grey, lightGray, red, white } from "../../utils/color";
 
- const  SocialButton = ({ onPress, title, icon, textColor }) => (
-    <TouchableOpacity onPress={onPress}>
+const SocialButton = ({ onPress, title, icon, textColor }) => (
+    <TouchableOpacity onPress={() => onPress()}>
         <View style={style.appButtonContainer} >
             <Image source={icon} style={{ height: 24, width: 24 }} />
-            <Text style={[style.appButtonText,{color:textColor}]}>{title}</Text>
+            <Text style={[style.appButtonText, { color: textColor }]}>{title}</Text>
         </View>
     </TouchableOpacity>
 );
@@ -17,16 +17,16 @@ const style = StyleSheet.create({
         borderWidth: 1,
         borderColor: darkGray,
         backgroundColor: lightGray,
-        elevation: 8,
+        // elevation: 8,
         borderRadius: 10,
-       // height:50,
-        paddingVertical: 12,
-        verticalAlign: 'bottom',
-        alignContent: 'center',
+        height: 50,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: 20,
         marginVertical: 10,
         flexDirection: 'row',
-        alignItems:'center'
+
 
 
     },

@@ -102,20 +102,10 @@ const OtpVerification = () => {
             setLoading(false);
             customToaast(SUCESS, 'Account created Sucessfully.')
 
-           // console.log(data);
+            // console.log(data);
             saveJSONToAsyncStorage(USER_DATA,
-                // {
-                //     'firstName': userData.firstName,
-                //     'lastName': userData.lastName,
-                //     'phoneNumber': userData.phoneNumber,
-                //     'email': userData.email,
-                //     'imagePath': userData.imagePath,
-                //     'password': userData.password,
-                //     'socialId': userData.socialId,
-                //     'accountType': accountType
-                // }
                 abc
-                )
+            )
 
 
         }).catch((error) => {

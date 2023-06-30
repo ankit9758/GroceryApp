@@ -23,19 +23,19 @@ const Profile = () => {
         getJSONFromAsyncStorage(USER_DATA)
     })
 
-  const clearUserData = async (key) => {
+    const clearUserData = async (key) => {
         try {
-          await AsyncStorage.removeItem(key)
-          navigation.reset({
-            key:'Login',
-            routes:[{name:'Login'}]
-          })
-        } catch(e) {
-          // remove error
+            await AsyncStorage.removeItem(key)
+            navigation.reset({
+                key: 'Login',
+                routes: [{ name: 'Login' }]
+            })
+        } catch (e) {
+            // remove error
         }
-      
+
         console.log('Done.')
-      }
+    }
 
     const getJSONFromAsyncStorage = async (key) => {
         try {
@@ -46,7 +46,7 @@ const Profile = () => {
                 setPhoneNumber(data['phoneNumber']);
                 setEmail(data['email']);
                 setImagePath(data['imagePath'])
-              
+
                 return data;
             }
         } catch (error) {
@@ -60,14 +60,16 @@ const Profile = () => {
                 <View style={stylesProfile.screenContainer}>
                     <View style={stylesProfile.profileContainer}>
                         <Image
-                          source={imagePath === '' ? require('../../images/no_data.png') : { uri: imagePath }}
-                            
-                            style={{ width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30,
-                             borderColor: red, }}
+                            source={imagePath === '' ? require('../../images/no_data.png') : { uri: imagePath }}
+
+                            style={{
+                                width: 120, height: 120, borderRadius: 120 / 2, alignSelf: 'center', backgroundColor: 'yellow', marginTop: 30,
+                                borderColor: red,
+                            }}
                         />
                         <View style={stylesProfile.profilePhotoContainer}>
                             <TouchableOpacity
-                                onPress={() => console.log('Hello')
+                                onPress={() => navigation.navigate('EditProfile')
                                 }>
                                 <View style={stylesProfile.uploadBackStyle}>
                                     <Image
@@ -85,8 +87,8 @@ const Profile = () => {
                     <Text style={[stylesProfile.appTextBold16, { alignSelf: 'center', marginTop: 5, paddingHorizontal: 20 }]}>Phone : {phone} </Text>
 
                     <View style={{ marginTop: 30, marginBottom: 80 }}>
-                        <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { navigation.navigate('SavedAddress')}} />
-                        <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Chats'} onClick={() => { navigation.navigate('ChatList')}} />
+                        <ProfileItems leftIcon={require('../../images/address.png')} title={'My Address'} onClick={() => { navigation.navigate('SavedAddress') }} />
+                        <ProfileItems leftIcon={require('../../images/cargo.png')} title={'My Chats'} onClick={() => { navigation.navigate('ChatList') }} />
                         <ProfileItems leftIcon={image_password} title={'Change Password '} onClick={() => { navigation.navigate('ChangePassword') }} />
                         <ProfileItems leftIcon={require('../../images/language.png')} title={'Languages'} onClick={() => { navigation.navigate('BottomNavigation') }} />
                         <ProfileItems leftIcon={image_logout} title={'Log out'} onClick={() => { setVisible(true) }} />
@@ -98,8 +100,8 @@ const Profile = () => {
             <SimpleModal modelVisible={visible} title={'Logout ?'} description={'Are you sure you want to Logout ?'}
                 yesText={'Yes'} noText={'No'} onNoClick={() => {
                     setVisible(false)
-                }} onYesClick={() => { 
-                    clearUserData(USER_DATA)  
+                }} onYesClick={() => {
+                    clearUserData(USER_DATA)
                     setVisible(false)
                 }}
             />

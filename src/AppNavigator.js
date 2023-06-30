@@ -18,6 +18,7 @@ import ChatList from './screens/topNavigation/ChatList';
 import BottomNavigaiton from './screens/bottomnavigations/BottomNavigation';
 import OtpVerification from './screens/OtpVerification';
 import TabTop from './screens/topNavigation/PagerTabs'
+import EditProfile from './screens/EditProfile';
 
 
 const Stack = createNativeStackNavigator()
@@ -31,9 +32,12 @@ const AppNavigator = (props) => {
                 <Stack.Screen name='TabTop' component={TabTop}
                     options={{ headerShown: false }} />
 
-            
+
 
                 <Stack.Screen name='OtpVerification' component={OtpVerification}
+                    options={{ headerShown: false }} />
+
+                <Stack.Screen name='EditProfile' component={EditProfile}
                     options={{ headerShown: false }} />
 
                 <Stack.Screen name='Signup' component={Signup}

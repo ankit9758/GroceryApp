@@ -45,12 +45,14 @@ const stylesApp = StyleSheet.create({
   },
   appButtonContainer: {
     backgroundColor:red,
-    elevation: 8,
+    height: 50,
     borderRadius: 10,
-    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent:'center',
+  //  paddingVertical: 12,
     paddingHorizontal: 12,
     marginVertical: 10,
-    elevation:5
+  //  elevation:5
   },
   indicator: {
     height: 2.5,

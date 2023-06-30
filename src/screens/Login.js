@@ -10,15 +10,15 @@ import AppButton from "../common/AppButton";
 import { useNavigation } from '@react-navigation/native'
 import OverlayActivityIndicator from "../common/Loader";
 import { ForgotPasswordModal } from "../common/Dialogs";
-import { isValidEmail, validateEmpty, validatePassword } from '../common/Validaton'
-import Toast from "../../utils/Toast";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { isValidEmail, returnFilterValue, validateEmpty, validatePassword } from '../common/Validaton'
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { USER_DATA } from "../../utils/AppConstant";
+import { ERROR, SUCESS, USER_DATA } from "../../utils/AppConstant";
 import SocialButton from "../common/SocialButton";
 import { image_facebook, image_google } from "../../utils/images";
-
+import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import Toast from "react-native-toast-message";
+import customToaast, { toastConfig } from "../../utils/ToastConfig";
 
 const Login = () => {
     const navigation = useNavigation();
@@ -35,12 +35,24 @@ const Login = () => {
     const [fogotPasswordEmailError, setFogotPasswordEmailError] = useState('')
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
-    const toastRef = React.useRef(null)
 
+    const [socialData, setSocialData] = useState({})
+ 
 
     useEffect(() => {
-        //getJSONFromAsyncStorage(USER_DATA)
-    })
+        GoogleSignin.configure({
+            webClientId: ''
+        });
+    }, [])
+
+    useEffect(() => {
+      
+        if (socialData.socialEmail) {
+            console.log('socialemail', socialData)
+            checkLoginData(true,socialData.socialEmail)
+        }
+    }, [socialData])
+
 
     const displayLoader = () => {
         setLoading(true);
@@ -56,28 +68,46 @@ const Login = () => {
         setEmailError('')
         setPasswordError('')
     }
-    const checkLoginData = () => {
+    const checkLoginData = (isSocialLogin, emailId) => {
+        console.log('socialemail', socialData)
         setLoading(true);
         firestore().collection('Users').where
-            ('email', '==', email).get().then((querySnapshot) => {
+            ('email', '==', emailId).get().then((querySnapshot) => {
                 console.log(querySnapshot.docs)
                 setLoading(false);
                 if (querySnapshot.docs.length > 0) {
-                    if (querySnapshot.docs[0]._data.email == email &&
-                        querySnapshot.docs[0]._data.password == password) {
-                        //    showSucessToast('User login sucessfully')
-                        console.log('dataa---', JSON.stringify(querySnapshot.docs[0]._data))
-                        saveJSONToAsyncStorage(USER_DATA, querySnapshot.docs[0]._data)
+                    if (isSocialLogin) {
+                        console.log('socialId', socialData)
+                        if (socialData.socialId !== '' && querySnapshot.docs[0]._data.email == emailId &&
+                            querySnapshot.docs[0]._data.socialId == socialData.socialId) {
+                            signOut() //signout sucessfully
+                            customToaast(SUCESS, 'Login Sucessfully.')
+                            console.log('dataa---Social', JSON.stringify(querySnapshot.docs[0]._data))
+                            saveJSONToAsyncStorage(USER_DATA, querySnapshot.docs[0]._data)
+                        } else {
+                            customToaast(ERROR, 'Social login email  is incorrect.')
+                        }
                     } else {
-                        showErrorToast('Email or password is incorrect.')
+                        if (querySnapshot.docs[0]._data.email == emailId &&
+                            querySnapshot.docs[0]._data.password == password) {
+                            console.log('dataa---', JSON.stringify(querySnapshot.docs[0]._data))
+                            customToaast(SUCESS, 'Login Sucessfully.')
+                            saveJSONToAsyncStorage(USER_DATA, querySnapshot.docs[0]._data)
+                        } else {
+                            customToaast(ERROR, 'Email or password is incorrect.')
+                            //  showErrorToast('Email or password is incorrect.')
+                        }
                     }
+
                 } else {
-                    showErrorToast('Account not found.')
+                    customToaast(ERROR, 'Account not found.')
+                    // showErrorToast('Account not found.')
                 }
             }).catch((error) => {
                 setLoading(false);
                 console.log(error)
-                showErrorToast(error)
+                customToaast(ERROR, error)
+                //showErrorToast(error)
 
             })
     }
@@ -87,6 +117,7 @@ const Login = () => {
             const jsonData = JSON.stringify(data);
             await AsyncStorage.setItem(key, jsonData);
             console.log('JSON value saved successfully.');
+
             //   setTimeout(() => {
             navigation.navigate('Main')
             // }, 3000);
@@ -96,39 +127,42 @@ const Login = () => {
         }
     };
 
-
-    const getJSONFromAsyncStorage = async (key) => {
+    // Somewhere in your code
+    const signIn = async () => {
         try {
-            const jsonData = await AsyncStorage.getItem(key);
-            if (jsonData !== null) {
-                const data = JSON.parse(jsonData);
-                console.log('Retrieved JSON value Login:', data);
-                navigation.navigate('Main')
-                return data;
-            }
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log('google data ', userInfo)
+            setSocialData({'socialId':returnFilterValue(userInfo.user.id),'socialEmail':returnFilterValue(userInfo.user.email)})
+          
+    
         } catch (error) {
-            console.log('Error retrieving JSON value:', error);
+            console.log('google data error', error)
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+            } else {
+                // some other error happened
+            }
         }
     };
-    const showErrorToast = (msg) => {
-        toastRef.current.show({
-            type: 'error',
-            text: msg,
-            duration: 2000
-        });
-    }
-    const showSucessToast = (msg) => {
-        toastRef.current.show({
-            type: 'success',
-            text: msg,
-            duration: 2000
-        });
-    }
+    const signOut = async () => {
+        try {
+            await GoogleSignin.signOut();
+            // Remember to remove the user from your app's state as well
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     return (
         // <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1, flexDirection: 'column' ,backgroundColor:white}}  >
-            {/* <Toast ref={toastRef} /> */}
+        <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: white }}  >
+
 
             {/* <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} /> */}
             {loading && <OverlayActivityIndicator />}
@@ -183,7 +217,7 @@ const Login = () => {
                         else {
                             setEmailError('')
                             setPasswordError('')
-                            checkLoginData()
+                            checkLoginData(false, email)
                             //displayLoader()
                         }
 
@@ -195,7 +229,7 @@ const Login = () => {
                         fontSize: 14, color: '#383838', fontFamily: 'Raleway-Regular'
                     }}>----or Login with---- </Text>
 
-                    <SocialButton onPress={() => { }} textColor={darkRed}
+                    <SocialButton onPress={() => signIn()} textColor={darkRed}
                         title={'LOGIN WITH GOOGLE'} icon={image_google} />
                     <SocialButton onPress={() => { }} textColor={blue}
                         title={'LOGIN WITH FACEBOOK'} icon={image_facebook} />
@@ -208,11 +242,6 @@ const Login = () => {
                             Don't have Account ?
                         </Text>
                         <TouchableOpacity onPress={() => {
-                            // toastRef.current.show({
-                            //     type: 'warning',
-                            //     text: 'Please enter Email',
-                            //     duration: 2000
-                            // });
                             clearErrors()
                             navigation.navigate('Signup')
                         }}>
@@ -227,6 +256,7 @@ const Login = () => {
 
 
             </ScrollView>
+            <Toast config={toastConfig} />
             <ForgotPasswordModal modelVisible={visible} title={'Forgot Password?'}
                 yesText={'Submit'} onNoClick={() => {
                     setVisible(false)
@@ -238,11 +268,8 @@ const Login = () => {
                 onYesClick={(emailId) => {
                     console.log('Email---' + emailId)
                     setVisible(false)
-                    toastRef.current.show({
-                        type: 'warning',
-                        text: 'Please enter Email',
-                        duration: 2000
-                    });
+                    customToaast(ERROR, 'Please enter Email')
+
                 }}
             />
         </SafeAreaView>
