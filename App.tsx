@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Appearance } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AppNavigator from './src/AppNavigator';
 import { Provider } from 'react-redux';
@@ -7,10 +7,13 @@ import RNBootSplash from "react-native-bootsplash";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER_DATA } from './utils/AppConstant';
+import { ThemeContext } from './utils/ThemeContext';
 const App = () => {
+
+    const [theme, setTheme] = useState({ mode: 'light' })
     const [isLoginchecked, setIsLoginChecked] = useState(false)
     const [initalRoute, setInitalRoute] = useState('')
-  
+
     useEffect(() => {
         const init = async () => {
             // …do multiple sync or async tasks
@@ -21,8 +24,8 @@ const App = () => {
                     const data = JSON.parse(jsonData);
                     console.log('Retrieved JSON value App Nav:', data);
 
-                   setInitalRoute('Main')
-                  //  setInitalRoute('TabTop')
+                    setInitalRoute('Main')
+                    //  setInitalRoute('TabTop')
                     setIsLoginChecked(true)
                     if (data['email'] !== '') {
                         console.log('Retrieved JSON value Nav:', { initalRoute });
@@ -51,14 +54,36 @@ const App = () => {
         });
     }, []);
 
+    Appearance.addChangeListener(({ colorScheme }) => {
+         updateTheme(colorScheme)
+    })
+    const updateTheme = (newTheme: any) => {
+        let mode;
+        const systemColorScheme = Appearance.getColorScheme()
+        mode = systemColorScheme === 'dark' ? 'dark' : 'light'
+        // if (!newTheme) {
+        //     mode = theme.mode === 'dark' ? 'light' : 'dark'
+        // }
+        newTheme = { mode };
+        console.log('colorThem==App', systemColorScheme)
+        setTheme(newTheme)
+    }
 
 
 
     return (
-        initalRoute!='' ? (
-            <Provider store={store}>
+
+        initalRoute != '' ? (
+            <ThemeContext.Provider value={{ theme, updateTheme }}>
+                <Provider store={store}>
+
                 <AppNavigator initalRoute={initalRoute} />
-            </Provider>) : <View></View>)
+
+                </Provider>
+            </ThemeContext.Provider>
+        ) : <View></View>
+
+    )
 
 
 

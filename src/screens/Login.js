@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
     TouchableOpacity, Text, View,
     ScrollView, SafeAreaView, StatusBar, Image, StyleSheet, Keyboard
@@ -19,8 +19,15 @@ import { image_facebook, image_google } from "../../utils/images";
 import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import Toast from "react-native-toast-message";
 import customToaast, { toastConfig } from "../../utils/ToastConfig";
+import { colors } from "../../utils/theme";
+import { ThemeContext } from "../../utils/ThemeContext";
 
 const Login = () => {
+
+    
+const { theme } = useContext(ThemeContext)
+let activeColors = colors[theme.mode]
+
     const navigation = useNavigation();
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
@@ -37,19 +44,21 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState('')
 
     const [socialData, setSocialData] = useState({})
- 
+
 
     useEffect(() => {
+        console.log('colorThem', theme.mode)
+
         GoogleSignin.configure({
             webClientId: ''
         });
     }, [])
 
     useEffect(() => {
-      
+
         if (socialData.socialEmail) {
             console.log('socialemail', socialData)
-            checkLoginData(true,socialData.socialEmail)
+            checkLoginData(true, socialData.socialEmail)
         }
     }, [socialData])
 
@@ -133,9 +142,9 @@ const Login = () => {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
             console.log('google data ', userInfo)
-            setSocialData({'socialId':returnFilterValue(userInfo.user.id),'socialEmail':returnFilterValue(userInfo.user.email)})
-          
-    
+            setSocialData({ 'socialId': returnFilterValue(userInfo.user.id), 'socialEmail': returnFilterValue(userInfo.user.email) })
+
+
         } catch (error) {
             console.log('google data error', error)
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -161,7 +170,7 @@ const Login = () => {
 
     return (
         // <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: white }}  >
+        <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: activeColors.sky }}  >
 
 
             {/* <StatusBar backgroundColor='#1AFf0000' translucent={true} showHideTransition={true} /> */}
@@ -277,7 +286,7 @@ const Login = () => {
 
     );
 }
-export default Login;
+
 
 const stylesLogin = StyleSheet.create({
     heading: {
@@ -324,3 +333,4 @@ const stylesLogin = StyleSheet.create({
     },
 
 })
+export default Login;
