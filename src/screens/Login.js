@@ -19,11 +19,14 @@ import { image_facebook, image_google } from "../../utils/images";
 import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import Toast from "react-native-toast-message";
 import customToaast, { toastConfig } from "../../utils/ToastConfig";
-import { colors } from "../../utils/theme";
+import { colors,lightthemeStyle ,darkthemeStyle} from "../../utils/theme";
 import { ThemeContext } from "../../utils/ThemeContext";
+import { useDispatch } from "react-redux";
+import { addUserData } from "../redux/slices/UseDataSlice";
+
 
 const Login = () => {
-
+    const disptach = useDispatch();
     
 const { theme } = useContext(ThemeContext)
 let activeColors = colors[theme.mode]
@@ -126,7 +129,7 @@ let activeColors = colors[theme.mode]
             const jsonData = JSON.stringify(data);
             await AsyncStorage.setItem(key, jsonData);
             console.log('JSON value saved successfully.');
-
+            disptach(addUserData(data))
             //   setTimeout(() => {
             navigation.navigate('Main')
             // }, 3000);
@@ -166,9 +169,9 @@ let activeColors = colors[theme.mode]
             console.error(error);
         }
     };
-
-
+   
     return (
+        
         // <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: activeColors.sky }}  >
 
@@ -178,7 +181,7 @@ let activeColors = colors[theme.mode]
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <Image source={require('../images/app_image.png')} resizeMode="center" style={stylesLogin.image} />
-                    <Text style={stylesLogin.heading}>
+                    <Text style={[stylesLogin.heading,lightthemeStyle.card]}>
                         Login
                     </Text>
                     <View style={{ marginTop: 20 }} />
@@ -223,7 +226,7 @@ let activeColors = colors[theme.mode]
                             setEmailError('')
                             setPasswordError('Please enter valid password')
                         }
-                        else {
+                        else {activeColors
                             setEmailError('')
                             setPasswordError('')
                             checkLoginData(false, email)
@@ -285,10 +288,14 @@ let activeColors = colors[theme.mode]
         // </GestureHandlerRootView>
 
     );
+
+
+
+
 }
-
-
-const stylesLogin = StyleSheet.create({
+const stylesLogin = StyleSheet.create(
+    
+    {
     heading: {
         fontSize: 50,
         color: red,
@@ -304,7 +311,7 @@ const stylesLogin = StyleSheet.create({
     },
     forgotText: {
         fontSize: 20,
-        color: red,
+        //color: activeColors.white,
         textAlign: 'right',
         marginTop: 20,
     },
@@ -333,4 +340,6 @@ const stylesLogin = StyleSheet.create({
     },
 
 })
+
+
 export default Login;

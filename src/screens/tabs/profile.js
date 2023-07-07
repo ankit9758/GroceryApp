@@ -9,8 +9,11 @@ import { USER_DATA } from '../../../utils/AppConstant';
 
 import { useNavigation } from '@react-navigation/native'
 import { image_logout, image_password } from '../../../utils/images';
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
+    const disptach = useDispatch();
+    const userData = useSelector(state => state.userData)
     const [visible, setVisible] = useState(false)
 
     const [imagePath, setImagePath] = useState('')
@@ -20,7 +23,15 @@ const Profile = () => {
     const navigation = useNavigation();
 
     useEffect(() => {
-        getJSONFromAsyncStorage(USER_DATA)
+        console.log('user---Data----',userData.data)
+        if(userData.data.email){
+            // console.log('user---Data----11',userData)
+                setName(userData.data['firstName'] + ' ' + userData.data['lastName'])
+                 setPhoneNumber(userData.data['phoneNumber']);
+                setEmail(userData.data['email']);
+                setImagePath(userData.data['imagePath'])
+        }
+        //getJSONFromAsyncStorage(USER_DATA)
     })
 
     const clearUserData = async (key) => {

@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native"
+
 export const colors = {
     light: {
         themeColor: '#FFFFFF',
@@ -18,3 +20,13 @@ export const colors = {
     commonBlack: '#000000',
 
 }
+export const lightthemeStyle = StyleSheet.create({
+    card: {
+        backgroundColor: colors.light.gray
+    }
+})
+export const darkthemeStyle = StyleSheet.create({
+    card: {
+        backgroundColor: colors.dark.gray
+    }
+})
